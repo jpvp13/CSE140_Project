@@ -54,3 +54,6 @@ dkms.conf
 
 
 .DS_Store
+cpu
+
+settings.json
