@@ -55,5 +55,8 @@ dkms.conf
 
 .DS_Store
 cpu
+cpu
 
 settings.json
+
+.vscode

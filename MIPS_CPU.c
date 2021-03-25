@@ -349,13 +349,13 @@ int getInput(FILE *ptr, char var[32], int code[32]){
      if ( ptr == NULL ){
         printf( "sample_binary.c file failed to open." ) ;
     } else {
-        for(int k = 0; k < 8; k++){
+        for(int k = 1; k < 9; k++){
+            printf("This is the %d iteration\n", k);
             printf("Enter an instruction in machine code:\n");
-            if(fgets ( var, 33, ptr) != NULL){
+            if(fgets ( var, 34, ptr) != NULL){
                 fscanf(ptr, "%[^\n]", var);   //reads number as a "word" then breaks it down to digits
 
-
-                printf(var);
+                printf("%s", var);
                 
                 
                 for (int i = 0; i < 32; i++){
@@ -371,6 +371,7 @@ int getInput(FILE *ptr, char var[32], int code[32]){
             }
 
             printf("------------------\n");
+            
         }
         // Closing the file using fclose()
         fclose(ptr) ;
@@ -389,7 +390,7 @@ int main(int argc, char** argv){
     int code[32];   //making space available
     char var[32];   //taking the instruction as a char then breaking it up into its individual numbers
 
-        getInput(ptr, var, code);
+    getInput(ptr, var, code);
 
 
     return 0;
