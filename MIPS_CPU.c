@@ -334,7 +334,6 @@ jal     000010
         return 0;
     }
 
-    return 0;
 }
 
 // void fetch(){
@@ -342,7 +341,6 @@ jal     000010
 
 
 // }
-
 
 int getInput(FILE *ptr, char var[32], int code[32]){
     // int i = 0;
@@ -353,10 +351,12 @@ int getInput(FILE *ptr, char var[32], int code[32]){
             printf("This is the %d iteration\n", k);
             printf("Enter an instruction in machine code:\n");
             if(fgets ( var, 34, ptr) != NULL){
+                pc = pc + 4;
+                printf("pc value is: %d\n", pc);    //wanted to see the pc value
                 fscanf(ptr, "%[^\n]", var);   //reads number as a "word" then breaks it down to digits
 
                 printf("%s", var);
-                
+                int next_pc = pc + 4;
                 
                 for (int i = 0; i < 32; i++){
                     code[i] = var[i] - '0'; //convert the char into a digit
@@ -391,7 +391,6 @@ int main(int argc, char** argv){
     char var[32];   //taking the instruction as a char then breaking it up into its individual numbers
 
     getInput(ptr, var, code);
-
 
     return 0;
 }
