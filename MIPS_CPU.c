@@ -90,8 +90,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
 
     }else if (opcode == 9){
@@ -104,8 +120,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 12){
         printf("Instruction Type: I\n");
@@ -117,8 +149,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23], code[24], code[25], code[26], code[27], code[28], code[29], code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 4){
         printf("Instruction Type: I\n");
@@ -130,8 +178,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 5){
         printf("Instruction Type: I\n");
@@ -143,8 +207,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 36){
         printf("Instruction Type: I\n");
@@ -156,8 +236,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 37){
         printf("Instruction Type: I\n");
@@ -169,8 +265,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 48){
         printf("Instruction Type: I\n");
@@ -182,8 +294,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 15){
         printf("Instruction Type: I\n");
@@ -195,8 +323,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 35){
         printf("Instruction Type: I\n");
@@ -208,8 +352,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 13){
         printf("Instruction Type: I\n");
@@ -221,8 +381,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 10){
         printf("Instruction Type: I\n");
@@ -234,8 +410,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 11){
         printf("Instruction Type: I\n");
@@ -247,8 +439,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 40){
         printf("Instruction Type: I\n");
@@ -260,8 +468,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 56){
         printf("Instruction Type: I\n");
@@ -273,8 +497,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 41){
         printf("Instruction Type: I\n");
@@ -286,8 +526,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else if(opcode == 43){
         printf("Instruction Type: I\n");
@@ -299,8 +555,24 @@ int Itype(int code[]){      //John Villalvazo
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s (%s)\n", register_name[rt], register_number[rt]);
 
-        int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-        printf("Immediate: %d\n", immediate);
+        if (code[16] == 0) {
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            printf("Immediate: %d\n", immediate);
+        }
+        else if (code[16] == 1) {
+            for (int i = 16; i <= 31; i++){
+                if (code[i] == 1){
+                    code[i] = 0;
+                }
+                else if (code[i] == 0){
+                    code[i] = 1;
+                }
+            }
+            int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            immediate = immediate + 1;
+
+            print("Immediate: -%d\n", immediate);
+        }
 
     }else {
         return 0;
