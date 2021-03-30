@@ -106,7 +106,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
 
@@ -136,7 +136,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 12){
@@ -165,7 +165,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 4){
@@ -194,7 +194,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 5){
@@ -223,7 +223,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 36){
@@ -252,7 +252,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 37){
@@ -281,7 +281,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 48){
@@ -310,7 +310,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 15){
@@ -339,7 +339,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 35){
@@ -368,7 +368,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 13){
@@ -397,7 +397,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 10){
@@ -426,7 +426,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 11){
@@ -455,7 +455,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 40){
@@ -484,7 +484,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 56){
@@ -513,7 +513,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 41){
@@ -542,7 +542,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 43){
@@ -571,12 +571,13 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            print("Immediate: -%d\n", immediate);
+            printf("Immediate: -%d\n", immediate);
         }
 
     }else {
         return 0;
     }
+    return 0;
 }
 
 int Jtype(int code[]){  //Uriel Montes
@@ -605,7 +606,7 @@ jal     000010
     else{
         return 0;
     }
-
+    return 0;
 }
 
 // void fetch(){
@@ -622,7 +623,7 @@ int getInput(FILE *ptr, char var[32], int code[32]){
         for(int k = 1; k < 9; k++){
             printf("This is the %d iteration\n", k);
             printf("Enter an instruction in machine code:\n");
-            if(fgets ( var, 34, ptr) != NULL){
+            if(fgets ( var, 33, ptr) != NULL){
                 pc = pc + 4;
                 printf("pc value is: %d\n", pc);    //wanted to see the pc value
                 fscanf(ptr, "%[^\n]", var);   //reads number as a "word" then breaks it down to digits
@@ -648,6 +649,7 @@ int getInput(FILE *ptr, char var[32], int code[32]){
         // Closing the file using fclose()
         fclose(ptr) ;
     }
+    return 0;
 
 }
 
