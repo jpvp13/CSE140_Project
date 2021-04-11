@@ -10,6 +10,8 @@ const char *register_name[32] = {"$zero","$at","$v0","$v1","$a0","$a1","$a2","$a
 
 
 int pc = 0; //pc counter to be incremented
+int next_pc = 0; //
+int jump_target = 0; //used to jump to a target
 
 
 
@@ -183,7 +185,11 @@ int Itype(int code[]){      //John Villalvazo
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
+            jump_target = (sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]) <<  2) + next_pc;    //(Immediate * 4) + pc
+
             printf("Immediate: %d\n", immediate);
+            
+            printf("Jump Target: %d\n", jump_target);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -197,7 +203,10 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
+            jump_target = (sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]) <<  2) + next_pc;    //(Immediate * 4) + pc
+
             printf("Immediate: -%d\n", immediate);
+            printf("Jump Target: %d\n", jump_target);
         }
 
     }else if(opcode == 5){
@@ -596,6 +605,8 @@ jal     000010
 
         int address = twosixConverter(code[6],code[7],code[8],code[9],code[10],code[11],code[12],code[13],code[14],code[15],code[16],code[17],code[18],code[19],code[20],code[21],code[22],code[23],code[24],code[25],code[26],code[27],code[28],code[29],code[30],code[31]);
         printf("Address: %d\n", address);
+
+
     }
 
     else if (opcode == 3){
@@ -685,5 +696,6 @@ int main(int argc, char** argv){
 00001100001010101010101101000101 <- jal
 00110100001001000000000000000000 <- ori
 00100000100001010000000000000000 <- addi
+00010010001100100000000000000011 <- beq
 */
 
