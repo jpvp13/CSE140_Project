@@ -12,6 +12,8 @@ const char *register_name[32] = {"$zero","$at","$v0","$v1","$a0","$a1","$a2","$a
 int pc = 0; //pc counter to be incremented
 int next_pc = 0; //
 int jump_target = 0; //used to jump to a target
+int dMem[32] = { };
+int total_clock_cycles = 0;
 
 
 
@@ -381,6 +383,8 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("Immediate: -%d\n", immediate);
+
+            Mem(opcode, immediate + rs, rt);
         }
 
     }else if(opcode == 13){
@@ -584,6 +588,8 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("Immediate: -%d\n", immediate);
+
+            Mem(opcode, immediate + rs, rt);
         }
 
     }else {
@@ -673,6 +679,31 @@ int fetch(FILE *ptr, char var[32], int code[32]){
 
 int ALU(){
     
+}
+
+int Mem(int opcode, int address, int value){
+    if (opcode == 35){  //load word
+        if (address == 0){
+            Writeback(dMem[0], value);
+        }
+        else if (address > 0){
+            Writeback(dMem[address/4], value);
+        }
+    }
+    else if (opcode == 43){ //store word
+        if (address == 0){
+            dMem[0] = value;
+        }
+        else if (address > 0){
+            dMem[address/4] = value;
+        }
+    }
+}
+
+int Writeback(int value, int rt){
+    rt = value;
+
+    total_clock_cycles = total_clock_cycles + 1;
 }
 
 int main(int argc, char** argv){
