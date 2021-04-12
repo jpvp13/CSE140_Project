@@ -11,8 +11,6 @@ const char *register_name[32] = {"$zero","$at","$v0","$v1","$a0","$a1","$a2","$a
 int pc = 0; //pc counter to be incremented
 int next_pc = 0; //
 int jump_target = 0; //used to jump to a target
-// int alu_op = 0;    //used for the alu operation code within execute
-int alu_op;
 
 // int alu_op = 0;    //used for the alu operation code within execute
 int alu_op;
