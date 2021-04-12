@@ -1,6 +1,27 @@
 #ifndef CONVERSIONS
 #define CONVERSIONS
 
+int fourConvert(int four, int three, int two, int one){
+    int decimal = 0;
+    
+    if (four == 1){
+        decimal = decimal + 8;
+    }
+    if (three == 1){
+        decimal = decimal + 4;
+    }
+    if (two == 1){
+        decimal = decimal + 2;
+    }
+    if (one == 1){
+        decimal = decimal + 1;
+    }
+    else{
+        decimal = decimal + 0;
+    }
+    return decimal;
+}
+
 int FiveConvert(int five, int four, int three, int two, int one){
     int decimal = 0;
 

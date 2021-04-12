@@ -8,12 +8,15 @@
 const char *registerfile[32] = {"R0","R1","R2","R3","R4","R5","R6","R7","R8","R9","R10","R11","R12","R13","R14","R15","R16","R17","R18","R19","R20","R21","R22","R23","R24","R25","R26","R27","R28","R29","R30","R31"};
 const char *register_name[32] = {"$zero","$at","$v0","$v1","$a0","$a1","$a2","$a3","$t0","$t1","$t2","$t3","$t4","$t5","$t6","$t7","$s0","$s1","$s2","$s3","$s4","$s5","$s6","$s7","$t8","$t9","$k0","$k1","$gp","$sp","$fp","$ra"};
 
-
 int pc = 0; //pc counter to be incremented
 int next_pc = 0; //
 int jump_target = 0; //used to jump to a target
+
+// int alu_op = 0;    //used for the alu operation code within execute
+int alu_op;
 int dMem[32] = { };
 int total_clock_cycles = 0;
+
 
 
 
@@ -53,6 +56,11 @@ subu    10 0011 (funct)
         printf("Shamt: %d\n", shamt);
   
         printf("Funct: %d\n", funct);
+
+        execute(funct, alu_op);
+        
+        printf("\n");
+
     } else{
         return 0;
     }
@@ -677,8 +685,84 @@ int fetch(FILE *ptr, char var[32], int code[32]){
 }
 
 
-int ALU(){
-    
+int execute(int funct, int alu_op){
+    if(funct == 32){ //add
+        int four = 0;
+        int three = 0;
+        int two = 1;
+        int one = 0;
+        alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 33){ //addu
+        int four = 0;
+        int three = 0;
+        int two = 1;
+        int one = 0;
+        alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 36){ //and
+        int four = 0;
+        int three = 0;
+        int two = 0;
+        int one = 0;
+        alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 8){  //jr 
+        int four = 0;
+        int three = 0;
+        int two = 1;
+        int one = 0;
+        alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 39){  //nor
+        int four = 0;
+        int three = 0;
+        int two = 0;
+        int one = 1;
+        alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 37){  //or
+        int four = 0;
+        int three = 0;
+        int two = 0;
+        int one = 1;
+        alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 42){  //slt
+        int four = 0;
+        int three = 0;
+        int two = 0;
+        int one = 1;
+        alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 43){  //sltu
+        int four = 0;
+        int three = 0;
+        int two = 0;
+        int one = 1;
+        alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 0){  //sll
+        int four = 0;
+        int three = 0;
+        int two = 0;
+        int one = 1;
+        alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 2){  //srl
+        int four = 0;
+        int three = 0;
+        int two = 0;
+        int one = 1;
+        alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 34){  //sub
+        int four = 0;
+        int three = 1;
+        int two = 1;
+        int one = 0;
+        alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 35){  //subu
+        int four = 0;
+        int three = 1;
+        int two = 1;
+        int one = 0;
+        alu_op = fourConvert(four,three, two, one);
+    }
+
+    printf("The alu_op is: %d", alu_op);
+
+    return 0;
 }
 
 int Mem(int opcode, int address, int value){
@@ -716,6 +800,8 @@ int main(int argc, char** argv){
     char var[32];   //taking the instruction as a char then breaking it up into its individual numbers
 
     fetch(ptr, var, code);
+    // printf("The value of alu_op via main: %d", alu_op);
+    // execute(alu_op);
 
     return 0;
 }
