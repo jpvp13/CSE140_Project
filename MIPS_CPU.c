@@ -149,7 +149,7 @@ int Itype(int code[]){      //John Villalvazo
 
             printf("Immediate: -%d\n", immediate);
         }
-
+ 
     }else if(opcode == 12){
         printf("Instruction Type: I\n");
         printf("Operation (Opcode): andi\n");
@@ -191,10 +191,9 @@ int Itype(int code[]){      //John Villalvazo
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            jump_target = (sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]) <<  2) + next_pc;    //(Immediate * 4) + pc
+            jump_target = (sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]) * 4) + (next_pc);    //(Immediate * 4) + pc
 
             printf("Immediate: %d\n", immediate);
-            
             printf("Jump Target: %d\n", jump_target);
         }
         else if (code[16] == 1) {
@@ -209,7 +208,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            jump_target = (sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]) <<  2) + next_pc;    //(Immediate * 4) + pc
+            jump_target = (sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]) * 4) + (next_pc);    //(Immediate * 4) + pc
 
             printf("Immediate: -%d\n", immediate);
             printf("Jump Target: %d\n", jump_target);
