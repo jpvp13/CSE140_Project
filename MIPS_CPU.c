@@ -14,6 +14,12 @@ int jump_target = 0; //used to jump to a target
 // int alu_op = 0;    //used for the alu operation code within execute
 int alu_op;
 
+// int alu_op = 0;    //used for the alu operation code within execute
+int alu_op;
+int dMem[32] = { };
+int total_clock_cycles = 0;
+
+
 
 
 
