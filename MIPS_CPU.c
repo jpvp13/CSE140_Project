@@ -71,7 +71,7 @@ subu    10 0011 (funct)
   
         printf("Funct: %d\n", funct);
 
-        execute(funct, alu_op, rs,  rt,  rd,  shamt);
+        execute(funct, alu_op, rs,  rt,  rd,  shamt, 0);
         
         printf("\n");
 
@@ -211,11 +211,12 @@ int Itype(int code[]){      //John Villalvazo
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            jump_target = (sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]) <<  2) + next_pc;    //(Immediate * 4) + pc
+            // jump_target = (sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]) <<  2) + next_pc;    //(Immediate * 4) + pc
 
             printf("Immediate: %d\n", immediate);
             
-            printf("Jump Target: %d\n", jump_target);
+            // printf("Jump Target: %d\n", jump_target);
+            execute(opcode, alu_op, rs,  rt,  0,  0, immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -229,10 +230,11 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            jump_target = (sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]) <<  2) + next_pc;    //(Immediate * 4) + pc
+            // jump_target = (sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]) <<  2) + next_pc;    //(Immediate * 4) + pc
 
             printf("Immediate: -%d\n", immediate);
-            printf("Jump Target: %d\n", jump_target);
+            // printf("Jump Target: %d\n", jump_target);
+            execute(opcode, alu_op, rs,  rt,  0,  0, immediate);
         }
 
     }else if(opcode == 5){
@@ -673,6 +675,7 @@ int fetch(FILE *ptr, char var[32], int code[32]){
                 fscanf(ptr, "%[^\n]", var);   //reads number as a "word" then breaks it down to digits
 
                 printf("%s", var);
+
                 int next_pc = pc + 4;
 
                 /* ! We will discuss later but the branch target and jump target addresses
@@ -708,8 +711,9 @@ int fetch(FILE *ptr, char var[32], int code[32]){
 
 
 
-int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt){
+int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immediate){
     //! what is the purpose of alu_zero??
+    //! note that we will shortly transition to "alu_op" code to start choosing which loop to trigger
 
     if(funct == 32){ //add
         int four = 0;
@@ -821,12 +825,15 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt){
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     }
 
-    // if(funct == 32){    //for lw
+    if(funct == 4){    //for beq (NOTE THIS IS STILL USING OPCODE JUST BEING CALLED FUNCT FOR SIMPLICITY)
+        int signExtend = immediate * 4;
+        int shiftLeft = signExtend << 2;
+        branch_target = shiftLeft + pc + 4;
+        // printf("the value of branch target %d\n", branch_target);
+        printf("pc is modified to 0x%x\n", branch_target);
+    }
 
-    //     int destination = dMem(rs + )
-    // }
-
-    printf("The alu_op is: %d", alu_op);
+    // printf("The alu_op is: %d\n", alu_op);
 
     return 0;
 }
