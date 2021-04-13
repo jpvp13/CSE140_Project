@@ -20,8 +20,16 @@ int alu_op;
 int dMem[32] = { };
 int total_clock_cycles = 0;
 
-
-
+//Control Signals
+int jump = 0;
+int regWrite = 0;
+int regDst = 0;
+int branch = 0;
+int ALUSrc = 0;
+int instType = 0;
+int memWrite = 0;
+int memToReg = 0;
+int memRead = 0;
 
 
 int Rtype(int code[]){              //Uriel Montes
@@ -40,6 +48,9 @@ sub     10 0010 (funct)
 subu    10 0011 (funct)
 */
     int opcode = SixConvert(code[0], code[1], code[2], code[3], code[4], code[5]);
+
+    ControlUnit(opcode);
+
     if (opcode == 0){  // checking if rtype or not
         printf("Instruction type: R\n");
 
@@ -97,6 +108,8 @@ int Itype(int code[]){      //John Villalvazo
 
     //00100000100001010000000000000000 <- test machine code
     int opcode = SixConvert(code[0], code[1], code[2], code[3], code[4], code[5]);
+
+    ControlUnit(opcode);
 
     if (opcode == 8){
         printf("Instruction Type: I\n");
@@ -620,6 +633,8 @@ jal     000010
 */
     int opcode = SixConvert(code[0], code[1], code[2], code[3], code[4], code[5]);
 
+    ControlUnit(opcode);
+
     if (opcode == 2){
         printf("Instruction type: J\n");
         printf("Operation: j\n");
@@ -839,6 +854,64 @@ int Writeback(int value, int rt){
     rt = value;
 
     total_clock_cycles = total_clock_cycles + 1;
+}
+
+int ControlUnit(int opcode) {
+    if (opcode == 0) {  //r-type
+        int jump = 0;
+        int regWrite = 1;
+        int regDst = 1;
+        int branch = 0;
+        int ALUSrc = 0;
+        int instType = 10; 
+        int memWrite = 0;
+        int memToReg = 0;
+        int memRead = 0;
+    }
+    else if (opcode == 35) {    //lw
+        int jump = 0;
+        int regWrite = 1;
+        int regDst = 0;
+        int branch = 0;
+        int ALUSrc = 1;
+        int instType = 00; 
+        int memWrite = 0;
+        int memToReg = 1;
+        int memRead = 1;
+    }
+    else if (opcode == 43){ //sw
+        int jump = 0;
+        int regWrite = 0;
+        int regDst = 0;
+        int branch = 0;
+        int ALUSrc = 1;
+        int instType = 00; 
+        int memWrite = 1;
+        int memToReg = 0;
+        int memRead = 0;
+    }
+    else if (opcode == 4){  //beq
+        int jump = 0;
+        int regWrite = 0;
+        int regDst = 0;
+        int branch = 1;
+        int ALUSrc = 0;
+        int instType = 01; 
+        int memWrite = 0;
+        int memToReg = 0;
+        int memRead = 0;
+    }
+    else if (opcode == 2){  //j
+        int jump = 1;
+        int regWrite = 0;
+        int regDst = 0;
+        int branch = 0;
+        int ALUSrc = 0;
+        int instType = 00; 
+        int memWrite = 0;
+        int memToReg = 0;
+        int memRead = 0;
+    }
 }
 
 int main(int argc, char** argv){
