@@ -12,6 +12,8 @@ const char *register_name[32] = {"$zero","$at","$v0","$v1","$a0","$a1","$a2","$a
 int pc = 0; //pc counter to be incremented
 int next_pc = 0; //
 int jump_target = 0; //used to jump to a target
+int alu_zero = 0;   //had to used "_" rather than "-" as it thought a subtraction was being done
+int branch_target = 0;
 
 // int alu_op = 0;    //used for the alu operation code within execute
 int alu_op;
@@ -58,7 +60,7 @@ subu    10 0011 (funct)
   
         printf("Funct: %d\n", funct);
 
-        execute(funct, alu_op);
+        execute(funct, alu_op, rs,  rt,  rd,  shamt);
         
         printf("\n");
 
@@ -690,80 +692,124 @@ int fetch(FILE *ptr, char var[32], int code[32]){
 }
 
 
-int execute(int funct, int alu_op){
+
+int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt){
+    //! what is the purpose of alu_zero??
+
     if(funct == 32){ //add
         int four = 0;
         int three = 0;
         int two = 1;
         int one = 0;
         alu_op = fourConvert(four,three, two, one);
+        int destination = rs + rt;
+        // int destination = *registerfile[rs] + *registerfile[rt];
+        
+        // printf("The value of destination is %d\n", destination);
+        printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 33){ //addu
         int four = 0;
         int three = 0;
         int two = 1;
         int one = 0;
         alu_op = fourConvert(four,three, two, one);
+        int destination = rs + rt;
+        printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 36){ //and
         int four = 0;
         int three = 0;
         int two = 0;
         int one = 0;
         alu_op = fourConvert(four,three, two, one);
+
+        int destination = rs & rt;
+        printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 8){  //jr 
         int four = 0;
         int three = 0;
         int two = 1;
         int one = 0;
         alu_op = fourConvert(four,three, two, one);
+        pc = rs;
+        printf("pc is modified to 0x%x\n",pc);
     } else if(funct == 39){  //nor
         int four = 0;
         int three = 0;
         int two = 0;
         int one = 1;
         alu_op = fourConvert(four,three, two, one);
+        int destination = !(rs|rt);
+        printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 37){  //or
         int four = 0;
         int three = 0;
         int two = 0;
         int one = 1;
         alu_op = fourConvert(four,three, two, one);
+        int destination = rs|rt;
+        printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 42){  //slt
         int four = 0;
         int three = 0;
         int two = 0;
         int one = 1;
         alu_op = fourConvert(four,three, two, one);
+        int destination = (rs < rt);
+        printf("The value of destination %d\n", destination);
+        printf("%s is modified to 0x%x\n", register_name[rd],destination);
+
+        /*this is going to need the (immediate *4) + offset since that what a offset is*/
     } else if(funct == 43){  //sltu
         int four = 0;
         int three = 0;
         int two = 0;
         int one = 1;
         alu_op = fourConvert(four,three, two, one);
+        int destination = (rs < rt);
+        printf("The value of destination %d\n", destination);
+        printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 0){  //sll
         int four = 0;
         int three = 0;
         int two = 0;
         int one = 1;
         alu_op = fourConvert(four,three, two, one);
+        int destination = rt << shamt;
+        printf("The value of destination %d\n", destination);
+        printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 2){  //srl
         int four = 0;
         int three = 0;
         int two = 0;
         int one = 1;
         alu_op = fourConvert(four,three, two, one);
+        int destination = rt >> shamt;
+        printf("The value of destination %d\n", destination);
+        printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 34){  //sub
         int four = 0;
         int three = 1;
         int two = 1;
         int one = 0;
         alu_op = fourConvert(four,three, two, one);
+        int destination = rs-rt;
+        printf("The value of destination %d\n", destination);
+        printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 35){  //subu
         int four = 0;
         int three = 1;
         int two = 1;
         int one = 0;
         alu_op = fourConvert(four,three, two, one);
+        int destination = rs-rt;
+        printf("The value of destination %d\n", destination);
+        printf("%s is modified to 0x%x\n", register_name[rd],destination);
     }
+
+    // if(funct == 32){    //for lw
+
+    //     int destination = dMem(rs + )
+    // }
 
     printf("The alu_op is: %d", alu_op);
 
