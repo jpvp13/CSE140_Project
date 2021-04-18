@@ -49,13 +49,16 @@ subu    10 0011 (funct)
 */
     int opcode = SixConvert(code[0], code[1], code[2], code[3], code[4], code[5]);
 
-    ControlUnit(opcode);
+    
 
     if (opcode == 0){  // checking if rtype or not
         printf("Instruction type: R\n");
 
         int funct = SixConvert(code[26], code[27], code[28], code[29], code[30], code[31]);
         operation(funct);
+
+
+        // ControlUnit(opcode, funct);
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
         printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
@@ -71,7 +74,7 @@ subu    10 0011 (funct)
   
         printf("Funct: %d\n", funct);
 
-        execute(funct, alu_op, rs,  rt,  rd,  shamt, 0);
+        execute(opcode, funct, alu_op, rs,  rt,  rd,  shamt, 0);
         
         printf("\n");
 
@@ -109,7 +112,7 @@ int Itype(int code[]){      //John Villalvazo
     //00100000100001010000000000000000 <- test machine code
     int opcode = SixConvert(code[0], code[1], code[2], code[3], code[4], code[5]);
 
-    ControlUnit(opcode);
+    // ControlUnit(opcode, 0);
 
     if (opcode == 8){
         printf("Instruction Type: I\n");
@@ -221,7 +224,8 @@ int Itype(int code[]){      //John Villalvazo
             printf("Immediate: %d\n", immediate);
             
             // printf("Jump Target: %d\n", jump_target);
-            execute(opcode, alu_op, rs,  rt,  0,  0, immediate);
+            // execute(opcode, alu_op, rs,  rt,  0,  0, immediate);
+            execute(opcode, 0, alu_op, rs,  rt,  0,  0, immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -239,7 +243,8 @@ int Itype(int code[]){      //John Villalvazo
 
             printf("Immediate: -%d\n", immediate);
             // printf("Jump Target: %d\n", jump_target);
-            execute(opcode, alu_op, rs,  rt,  0,  0, immediate);
+            // execute(opcode, alu_op, rs,  rt,  0,  0, immediate);
+            execute(opcode, 0, alu_op, rs,  rt,  0,  0, immediate);
         }
 
     }else if(opcode == 5){
@@ -640,7 +645,7 @@ jal     000010
 */
     int opcode = SixConvert(code[0], code[1], code[2], code[3], code[4], code[5]);
 
-    ControlUnit(opcode);
+    // ControlUnit(opcode, 0);
 
     if (opcode == 2){
         printf("Instruction type: J\n");
@@ -716,16 +721,13 @@ int fetch(FILE *ptr, char var[32], int code[32]){
 
 
 
-int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immediate){
+
+int execute(int opcode, int funct, int alu_op, int rs, int rt, int rd, int shamt, int immediate){
     //! what is the purpose of alu_zero??
     //! note that we will shortly transition to "alu_op" code to start choosing which loop to trigger
 
     if(funct == 32){ //add
-        int four = 0;
-        int three = 0;
-        int two = 1;
-        int one = 0;
-        alu_op = fourConvert(four,three, two, one);
+        ControlUnit(opcode, funct);
         int destination = rs + rt;
         alu_zero = 0;
         // int destination = *registerfile[rs] + *registerfile[rt];
@@ -733,56 +735,38 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         // printf("The value of destination is %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 33){ //addu
-        int four = 0;
-        int three = 0;
-        int two = 1;
-        int one = 0;
-        alu_op = fourConvert(four,three, two, one);
+        ControlUnit(opcode, funct);
+
         int destination = rs + rt;
         alu_zero = 0;
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 36){ //and
-        int four = 0;
-        int three = 0;
-        int two = 0;
-        int one = 0;
-        alu_op = fourConvert(four,three, two, one);
+        ControlUnit(opcode, funct);
+
         alu_zero = 0;
         int destination = rs & rt;
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 8){  //jr 
-        int four = 0;
-        int three = 0;
-        int two = 1;
-        int one = 0;
-        alu_op = fourConvert(four,three, two, one);
+        ControlUnit(opcode, funct);
+
         pc = rs;
         alu_zero = 0;
         printf("pc is modified to 0x%x\n",pc);
     } else if(funct == 39){  //nor
-        int four = 0;
-        int three = 0;
-        int two = 0;
-        int one = 1;
-        alu_op = fourConvert(four,three, two, one);
+        ControlUnit(opcode, funct);
+
         int destination = !(rs|rt);
         alu_zero = 0;
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 37){  //or
-        int four = 0;
-        int three = 0;
-        int two = 0;
-        int one = 1;
-        alu_op = fourConvert(four,three, two, one);
+        ControlUnit(opcode, funct);
+
         int destination = rs|rt;
         alu_zero = 0;
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 42){  //slt
-        int four = 0;
-        int three = 0;
-        int two = 0;
-        int one = 1;
-        alu_op = fourConvert(four,three, two, one);
+        ControlUnit(opcode, funct);
+
         int destination = (rs < rt);
         alu_zero = 0;
         printf("The value of destination %d\n", destination);
@@ -790,51 +774,36 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
 
         /*this is going to need the (immediate *4) + offset since that what a offset is*/
     } else if(funct == 43){  //sltu
-        int four = 0;
-        int three = 0;
-        int two = 0;
-        int one = 1;
-        alu_op = fourConvert(four,three, two, one);
+        ControlUnit(opcode, funct);
+
         int destination = (rs < rt);
         alu_zero = 0;
         printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 0){  //sll
-        int four = 0;
-        int three = 0;
-        int two = 0;
-        int one = 1;
-        alu_op = fourConvert(four,three, two, one);
+        ControlUnit(opcode, funct);
+
         int destination = rt << shamt;
         alu_zero = 0;
         printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 2){  //srl
-        int four = 0;
-        int three = 0;
-        int two = 0;
-        int one = 1;
-        alu_op = fourConvert(four,three, two, one);
+        ControlUnit(opcode, funct);
+
         int destination = rt >> shamt;
         alu_zero = 0;
         printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 34){  //sub
-        int four = 0;
-        int three = 1;
-        int two = 1;
-        int one = 0;
-        alu_op = fourConvert(four,three, two, one);
+        ControlUnit(opcode, funct);
+
         int destination = rs-rt;
         alu_zero = 0;
         printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 35){  //subu
-        int four = 0;
-        int three = 1;
-        int two = 1;
-        int one = 0;
-        alu_op = fourConvert(four,three, two, one);
+        ControlUnit(opcode, funct);
+
         int destination = rs-rt;
         alu_zero = 0;
         printf("The value of destination %d\n", destination);
@@ -889,7 +858,7 @@ int Writeback(int value, int rt){
     total_clock_cycles = total_clock_cycles + 1;
 }
 
-int ControlUnit(int opcode) {
+int ControlUnit(int opcode, int funct) {
     if (opcode == 0) {  //r-type
         int jump = 0;
         int regWrite = 1;
@@ -900,6 +869,9 @@ int ControlUnit(int opcode) {
         int memWrite = 0;
         int memToReg = 0;
         int memRead = 0;
+        returnAluCode(funct);
+        printf("The ALU is %d\n", alu_op);
+        // printf("The ALU code is %d\n", returnAluCode(funct));
     }
     else if (opcode == 35) {    //lw
         int jump = 0;
@@ -911,6 +883,8 @@ int ControlUnit(int opcode) {
         int memWrite = 0;
         int memToReg = 1;
         int memRead = 1;
+        returnAluCode(funct);
+        printf("The ALU is %d\n", alu_op);
     }
     else if (opcode == 43){ //sw
         int jump = 0;
@@ -922,6 +896,8 @@ int ControlUnit(int opcode) {
         int memWrite = 1;
         int memToReg = 0;
         int memRead = 0;
+        returnAluCode(funct);
+        printf("The ALU is %d\n", alu_op);
     }
     else if (opcode == 4){  //beq
         int jump = 0;
@@ -933,6 +909,8 @@ int ControlUnit(int opcode) {
         int memWrite = 0;
         int memToReg = 0;
         int memRead = 0;
+        returnAluCode(funct);
+        printf("The ALU is %d\n", alu_op);
     }
     else if (opcode == 2){  //j
         int jump = 1;
@@ -944,7 +922,64 @@ int ControlUnit(int opcode) {
         int memWrite = 0;
         int memToReg = 0;
         int memRead = 0;
+        returnAluCode(funct);
+        printf("The ALU is %d\n", alu_op);
     }
+
+
+}
+
+int returnAluCode(int funct){
+    if(funct == 32){
+        int four = 0;
+        int three = 0;
+        int two = 1;
+        int one = 0;
+        return alu_op = fourConvert(four,three, two, one);
+    } else if (funct == 33){
+        int four = 0;
+        int three = 0;
+        int two = 1;
+        int one = 0;
+        return alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 36){
+        int four = 0;
+        int three = 0;
+        int two = 0;
+        int one = 0;
+        return alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 39){
+        int four = 0;
+        int three = 0;
+        int two = 0;
+        int one = 1;
+        return alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 37){
+        int four = 0;
+        int three = 0;
+        int two = 0;
+        int one = 1;
+        return alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 0){
+        int four = 0;
+        int three = 0;
+        int two = 0;
+        int one = 1;
+        return alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 34){
+        int four = 0;
+        int three = 1;
+        int two = 1;
+        int one = 0;
+        return alu_op = fourConvert(four,three, two, one);
+    } else if(funct == 35){
+        int four = 0;
+        int three = 1;
+        int two = 1;
+        int one = 0;
+        return alu_op = fourConvert(four,three, two, one);
+    }
+    return 0;
 }
 
 int main(int argc, char** argv){
