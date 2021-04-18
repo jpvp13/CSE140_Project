@@ -124,6 +124,8 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("Immediate: %d\n", immediate);
+            int value = registerfile[rt] + immediate;
+            printf("Value of rs is %x\n", value);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -138,6 +140,9 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("Immediate: -%d\n", immediate);
+            
+            int value = &registerfile[rt] + immediate;
+            printf("Value of rs is %d\n", value);
         }
 
 
@@ -667,8 +672,9 @@ int fetch(FILE *ptr, char var[32], int code[32]){
         printf( "sample_binary.c file failed to open." ) ;
     } else {
         for(int k = 1; k < 9; k++){
-            printf("This is the %d iteration\n", k);
-            printf("Enter an instruction in machine code:\n");
+            // printf("total_clock_cycles %d:\n", total_clock_cycles);
+            printf("total_clock_cycle decided by fetch(): %d\n", k);
+            // printf("Enter an instruction in machine code:\n");
             if(fgets ( var, 33, ptr) != NULL){
                 pc = pc + 4;
                 printf("pc value is: %d\n", pc);    //wanted to see the pc value
@@ -696,7 +702,6 @@ int fetch(FILE *ptr, char var[32], int code[32]){
                 Rtype(code);    //these is the decode() functions that are embedded within fetch()
                 Itype(code);    //these is the decode() functions that are embedded within fetch()
                 Jtype(code);    //these is the decode() functions that are embedded within fetch()
-           
             }
 
             printf("------------------\n");
@@ -722,6 +727,7 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         int one = 0;
         alu_op = fourConvert(four,three, two, one);
         int destination = rs + rt;
+        alu_zero = 0;
         // int destination = *registerfile[rs] + *registerfile[rt];
         
         // printf("The value of destination is %d\n", destination);
@@ -733,6 +739,7 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         int one = 0;
         alu_op = fourConvert(four,three, two, one);
         int destination = rs + rt;
+        alu_zero = 0;
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 36){ //and
         int four = 0;
@@ -740,7 +747,7 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         int two = 0;
         int one = 0;
         alu_op = fourConvert(four,three, two, one);
-
+        alu_zero = 0;
         int destination = rs & rt;
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 8){  //jr 
@@ -750,6 +757,7 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         int one = 0;
         alu_op = fourConvert(four,three, two, one);
         pc = rs;
+        alu_zero = 0;
         printf("pc is modified to 0x%x\n",pc);
     } else if(funct == 39){  //nor
         int four = 0;
@@ -758,6 +766,7 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         int one = 1;
         alu_op = fourConvert(four,three, two, one);
         int destination = !(rs|rt);
+        alu_zero = 0;
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 37){  //or
         int four = 0;
@@ -766,6 +775,7 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         int one = 1;
         alu_op = fourConvert(four,three, two, one);
         int destination = rs|rt;
+        alu_zero = 0;
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 42){  //slt
         int four = 0;
@@ -774,6 +784,7 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         int one = 1;
         alu_op = fourConvert(four,three, two, one);
         int destination = (rs < rt);
+        alu_zero = 0;
         printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
 
@@ -785,6 +796,7 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         int one = 1;
         alu_op = fourConvert(four,three, two, one);
         int destination = (rs < rt);
+        alu_zero = 0;
         printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 0){  //sll
@@ -794,6 +806,7 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         int one = 1;
         alu_op = fourConvert(four,three, two, one);
         int destination = rt << shamt;
+        alu_zero = 0;
         printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 2){  //srl
@@ -803,6 +816,7 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         int one = 1;
         alu_op = fourConvert(four,three, two, one);
         int destination = rt >> shamt;
+        alu_zero = 0;
         printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 34){  //sub
@@ -812,6 +826,7 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         int one = 0;
         alu_op = fourConvert(four,three, two, one);
         int destination = rs-rt;
+        alu_zero = 0;
         printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 35){  //subu
@@ -821,14 +836,23 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
         int one = 0;
         alu_op = fourConvert(four,three, two, one);
         int destination = rs-rt;
+        alu_zero = 0;
         printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     }
 
     if(funct == 4){    //for beq (NOTE THIS IS STILL USING OPCODE JUST BEING CALLED FUNCT FOR SIMPLICITY)
-        int signExtend = immediate * 4;
+        int signExtend = immediate * 2;
         int shiftLeft = signExtend << 2;
         branch_target = shiftLeft + pc + 4;
+
+        int sub = rs-rt;
+        if(sub == 0){
+            alu_zero = 1;
+        } else{
+            alu_zero = 0;
+        }
+        
         // printf("the value of branch target %d\n", branch_target);
         printf("pc is modified to 0x%x\n", branch_target);
     }
@@ -837,6 +861,8 @@ int execute(int funct, int alu_op, int rs, int rt, int rd, int shamt, int immedi
 
     return 0;
 }
+
+/*for beq subtract $1 and $2 which will be used to "jump to branch", be used on every intruction and only "triggered" with beq*/
 
 int Mem(int opcode, int address, int value){
     if (opcode == 35){  //load word
