@@ -52,7 +52,7 @@ subu    10 0011 (funct)
     
 
     if (opcode == 0){  // checking if rtype or not
-        printf("Instruction type: R\n");
+        // printf("Instruction type: R\n");
 
         int funct = SixConvert(code[26], code[27], code[28], code[29], code[30], code[31]);
         operation(funct);
@@ -61,18 +61,18 @@ subu    10 0011 (funct)
         // ControlUnit(opcode, funct);
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         int rd = FiveConvert(code[16], code[17], code[18],code[19],code[20]);
-        printf("Rd: %s (%s)\n", register_name[rd], registerfile[rd]);
+        // printf("Rd: %s (%s)\n", register_name[rd], registerfile[rd]);
 
         int shamt = FiveConvert(code[21], code[22], code[23],code[24],code[25]);
-        printf("Shamt: %d\n", shamt);
+        // printf("Shamt: %d\n", shamt);
   
-        printf("Funct: %d\n", funct);
+        // printf("Funct: %d\n", funct);
 
         execute(opcode, funct, alu_op, rs,  rt,  rd,  shamt, 0);
         
@@ -115,20 +115,20 @@ int Itype(int code[]){      //John Villalvazo
     // ControlUnit(opcode, 0);
 
     if (opcode == 8){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): addi\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): addi\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
             int value = registerfile[rt] + immediate;
-            printf("Value of rs is %x\n", value);
+            // printf("Value of rs is %x\n", value);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -142,26 +142,26 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
             
             int value = &registerfile[rt] + immediate;
-            printf("Value of rs is %d\n", value);
+            // printf("Value of rs is %d\n", value);
         }
 
 
     }else if (opcode == 9){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): addiu");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): addiu");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -175,22 +175,22 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 12){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): andi\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): andi\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -204,24 +204,24 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 4){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): beq\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): beq\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             // jump_target = (sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]) <<  2) + next_pc;    //(Immediate * 4) + pc
 
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
             
             // printf("Jump Target: %d\n", jump_target);
             // execute(opcode, alu_op, rs,  rt,  0,  0, immediate);
@@ -241,25 +241,25 @@ int Itype(int code[]){      //John Villalvazo
 
             // jump_target = (sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]) <<  2) + next_pc;    //(Immediate * 4) + pc
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
             // printf("Jump Target: %d\n", jump_target);
             // execute(opcode, alu_op, rs,  rt,  0,  0, immediate);
             execute(opcode, 0, alu_op, rs,  rt,  0,  0, immediate);
         }
 
     }else if(opcode == 5){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): bne\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): bne\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -273,22 +273,22 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 36){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): lbu\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): lbu\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -302,22 +302,22 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 37){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): lhu\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): lhu\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -331,22 +331,22 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 48){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): ll\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): ll\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -360,22 +360,22 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 15){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): lui\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): lui\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -389,22 +389,22 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 35){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): lw\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): lw\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
 
             Mem(opcode, immediate + rs, rt);
         }
@@ -420,24 +420,24 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
 
             Mem(opcode, immediate + rs, rt);
         }
 
     }else if(opcode == 13){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): ori\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): ori\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -451,22 +451,22 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 10){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): slti\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): slti\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -480,22 +480,22 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 11){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): sltiu\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): sltiu\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -509,22 +509,22 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 40){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): sb\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): sb\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -538,22 +538,22 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 56){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): sc\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): sc\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -567,22 +567,22 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 41){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): sh\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): sh\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -596,22 +596,22 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
         }
 
     }else if(opcode == 43){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): sw\n");
+        // printf("Instruction Type: I\n");
+        // printf("Operation (Opcode): sw\n");
 
         int rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
+        // printf("Rs: %s (%s)\n", register_name[rs], registerfile[rs]);
 
         int rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
+        // printf("Rt: %s (%s)\n", register_name[rt], registerfile[rt]);
 
         if (code[16] == 0) {
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("Immediate: %d\n", immediate);
+            // printf("Immediate: %d\n", immediate);
 
             Mem(opcode, immediate + rs, rt);
         }
@@ -627,7 +627,7 @@ int Itype(int code[]){      //John Villalvazo
             int immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             immediate = immediate + 1;
 
-            printf("Immediate: -%d\n", immediate);
+            // printf("Immediate: -%d\n", immediate);
 
             Mem(opcode, immediate + rs, rt);
         }
@@ -648,21 +648,21 @@ jal     000010
     // ControlUnit(opcode, 0);
 
     if (opcode == 2){
-        printf("Instruction type: J\n");
-        printf("Operation: j\n");
+        // printf("Instruction type: J\n");
+        // printf("Operation: j\n");
 
         int address = twosixConverter(code[6],code[7],code[8],code[9],code[10],code[11],code[12],code[13],code[14],code[15],code[16],code[17],code[18],code[19],code[20],code[21],code[22],code[23],code[24],code[25],code[26],code[27],code[28],code[29],code[30],code[31]);
-        printf("Address: %d\n", address);
+        // printf("Address: %d\n", address);
 
 
     }
 
     else if (opcode == 3){
-        printf("Instruction type: J\n");
-        printf("Operation: jal\n");
+        // printf("Instruction type: J\n");
+        // printf("Operation: jal\n");
 
         int address = twosixConverter(code[6],code[7],code[8],code[9],code[10],code[11],code[12],code[13],code[14],code[15],code[16],code[17],code[18],code[19],code[20],code[21],code[22],code[23],code[24],code[25],code[26],code[27],code[28],code[29],code[30],code[31]);
-        printf("Address: %d\n", address);
+        // printf("Address: %d\n", address);
     }
 
     else{
@@ -682,10 +682,10 @@ int fetch(FILE *ptr, char var[32], int code[32]){
             // printf("Enter an instruction in machine code:\n");
             if(fgets ( var, 33, ptr) != NULL){
                 pc = pc + 4;
-                printf("pc value is: %d\n", pc);    //wanted to see the pc value
+                // printf("pc value is: %d\n", pc);    //wanted to see the pc value
                 fscanf(ptr, "%[^\n]", var);   //reads number as a "word" then breaks it down to digits
 
-                printf("%s", var);
+                // printf("%s", var);
 
                 int next_pc = pc + 4;
 
@@ -769,7 +769,7 @@ int execute(int opcode, int funct, int alu_op, int rs, int rt, int rd, int shamt
 
         int destination = (rs < rt);
         alu_zero = 0;
-        printf("The value of destination %d\n", destination);
+        // printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
 
         /*this is going to need the (immediate *4) + offset since that what a offset is*/
@@ -778,35 +778,35 @@ int execute(int opcode, int funct, int alu_op, int rs, int rt, int rd, int shamt
 
         int destination = (rs < rt);
         alu_zero = 0;
-        printf("The value of destination %d\n", destination);
+        // printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 0){  //sll
         ControlUnit(opcode, funct);
 
         int destination = rt << shamt;
         alu_zero = 0;
-        printf("The value of destination %d\n", destination);
+        // printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 2){  //srl
         ControlUnit(opcode, funct);
 
         int destination = rt >> shamt;
         alu_zero = 0;
-        printf("The value of destination %d\n", destination);
+        // printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 34){  //sub
         ControlUnit(opcode, funct);
 
-        int destination = rs-rt;
+        int destination = rt-rs;
         alu_zero = 0;
-        printf("The value of destination %d\n", destination);
+        // printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     } else if(funct == 35){  //subu
         ControlUnit(opcode, funct);
 
         int destination = rs-rt;
         alu_zero = 0;
-        printf("The value of destination %d\n", destination);
+        // printf("The value of destination %d\n", destination);
         printf("%s is modified to 0x%x\n", register_name[rd],destination);
     }
 
@@ -870,7 +870,7 @@ int ControlUnit(int opcode, int funct) {
         int memToReg = 0;
         int memRead = 0;
         returnAluCode(funct);
-        printf("The ALU is %d\n", alu_op);
+        // printf("The ALU is %d\n", alu_op);
         // printf("The ALU code is %d\n", returnAluCode(funct));
     }
     else if (opcode == 35) {    //lw
@@ -884,7 +884,7 @@ int ControlUnit(int opcode, int funct) {
         int memToReg = 1;
         int memRead = 1;
         returnAluCode(funct);
-        printf("The ALU is %d\n", alu_op);
+        // printf("The ALU is %d\n", alu_op);
     }
     else if (opcode == 43){ //sw
         int jump = 0;
@@ -897,7 +897,7 @@ int ControlUnit(int opcode, int funct) {
         int memToReg = 0;
         int memRead = 0;
         returnAluCode(funct);
-        printf("The ALU is %d\n", alu_op);
+        // printf("The ALU is %d\n", alu_op);
     }
     else if (opcode == 4){  //beq
         int jump = 0;
@@ -910,7 +910,7 @@ int ControlUnit(int opcode, int funct) {
         int memToReg = 0;
         int memRead = 0;
         returnAluCode(funct);
-        printf("The ALU is %d\n", alu_op);
+        // printf("The ALU is %d\n", alu_op);
     }
     else if (opcode == 2){  //j
         int jump = 1;
@@ -923,7 +923,7 @@ int ControlUnit(int opcode, int funct) {
         int memToReg = 0;
         int memRead = 0;
         returnAluCode(funct);
-        printf("The ALU is %d\n", alu_op);
+        // printf("The ALU is %d\n", alu_op);
     }
 
 
