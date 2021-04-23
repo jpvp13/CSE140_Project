@@ -44,43 +44,75 @@ int changedMem = -1;
 int changedRegister = -1;
 
 
-int decode(int code[]){
-    Rtype(code);    //these is the decode() functions that are embedded within fetch()
-    Itype(code);    //these is the decode() functions that are embedded within fetch()
-    Jtype(code);    //these is the decode() functions that are embedded within fetch()
+int ControlUnit(int opcode, int funct) {
+    if (opcode == 0) {  //r-type
+        jump = 0;
+        regWrite = 1;
+        regDst = 1;
+        branch = 0;
+        ALUSrc = 0;
+        instType = 10; 
+        memWrite = 0;
+        memToReg = 0;
+        memRead = 0;
+        alu_op = returnAluCode(funct);
+
+        // printf("The ALU is %d\n", alu_op);
+        // printf("The ALU code is %d\n", returnAluCode(funct));
+    }
+    else if (opcode == 35) {    //lw
+        jump = 0;
+        regWrite = 1;
+        regDst = 0;
+        branch = 0;
+        ALUSrc = 1;
+        instType = 00; 
+        memWrite = 0;
+        memToReg = 1;
+        memRead = 1;
+        alu_op = returnAluCode(funct);
+        // printf("The ALU is %d\n", alu_op);
+    }
+    else if (opcode == 43){ //sw
+        jump = 0;
+        regWrite = 0;
+        regDst = 0;
+        branch = 0;
+        ALUSrc = 1;
+        instType = 00; 
+        memWrite = 1;
+        memToReg = 0;
+        memRead = 0;
+        alu_op = returnAluCode(funct);
+        // printf("The ALU is %d\n", alu_op);
+    }
+    else if (opcode == 4){  //beq
+        jump = 0;
+        regWrite = 0;
+        regDst = 0;
+        branch = 1;
+        ALUSrc = 0;
+        instType = 01; 
+        memWrite = 0;
+        memToReg = 0;
+        memRead = 0;
+        alu_op = returnAluCode(funct);
+        // printf("The ALU is %d\n", alu_op);
+    }
+    else if (opcode == 2){  //j
+        jump = 1;
+        regWrite = 0;
+        regDst = 0;
+        branch = 0;
+        ALUSrc = 0;
+        instType = 00; 
+        memWrite = 0;
+        memToReg = 0;
+        memRead = 0;
+        alu_op = returnAluCode(funct);
+        // printf("The ALU is %d\n", alu_op);
+    }
 }
-
-// int updatePC(int alu_op, int val, int opcode, int funct){
-//     // printf("Incoming value of funct is %d\n", funct);
-//     if(funct == 32 || funct == 34 || funct == 36 || funct == 37 || funct == 39 || funct == 42){ //R-types
-//         pc = pc + 4;
-//         // printf("pc is modified to 0x$x", pc);
-//         // printf("Within updatePC r-type. The value of pc is %d\n", pc);
-//         return;
-//     }
-
-//     if(opcode == 35 || opcode == 43){  //I-Types
-//         pc = pc + 4;
-//         // printf("Within updatePC i-type The value of pc is %d\n", pc);
-//         // printf("pc is modified to 0x$x", pc);
-//         return;
-//     } else if(opcode == 4){
-//         pc = pc + 4;
-//         branch_target = pc + immediate * 4;
-//         pc = branch_target;
-//         // printf("Wuthin updatePC beq, The value of pc is %d\n", pc);
-//         return;
-//         // printf("pc is modified to 0x$x", pc);
-//     }
-
-//     if(opcode == 2){
-//         //jump goes here
-//         pc = pc + (jumpAddress << 2);
-//         // printf("Within updatePC j, The value of pc is %d\n", pc);
-//         return;
-//         //!
-//     }
-// }
 
 
 // int execute(int opcode, int funct, int alu_op, int rs, int rt, int rd, int shamt, int immediate){
@@ -263,7 +295,7 @@ int Writeback(int opcode, int alu_op){
     if(opcode == 35 || opcode == 43 || opcode == 4){
         // changedRegister = rt;
         // register_name[rt] = value;
-        return;total_clock_cycles = total_clock_cycles + 1;
+        return total_clock_cycles = total_clock_cycles + 1;
         
     } else {
         
@@ -275,79 +307,9 @@ int Writeback(int opcode, int alu_op){
     printf("##End writeback##\n");
 }
 
-int ControlUnit(int opcode, int funct) {
-    if (opcode == 0) {  //r-type
-        jump = 0;
-        regWrite = 1;
-        regDst = 1;
-        branch = 0;
-        ALUSrc = 0;
-        instType = 10; 
-        memWrite = 0;
-        memToReg = 0;
-        memRead = 0;
-        alu_op = returnAluCode(funct);
-
-        // printf("The ALU is %d\n", alu_op);
-        // printf("The ALU code is %d\n", returnAluCode(funct));
-    }
-    else if (opcode == 35) {    //lw
-        jump = 0;
-        regWrite = 1;
-        regDst = 0;
-        branch = 0;
-        ALUSrc = 1;
-        instType = 00; 
-        memWrite = 0;
-        memToReg = 1;
-        memRead = 1;
-        alu_op = returnAluCode(funct);
-        // printf("The ALU is %d\n", alu_op);
-    }
-    else if (opcode == 43){ //sw
-        jump = 0;
-        regWrite = 0;
-        regDst = 0;
-        branch = 0;
-        ALUSrc = 1;
-        instType = 00; 
-        memWrite = 1;
-        memToReg = 0;
-        memRead = 0;
-        alu_op = returnAluCode(funct);
-        // printf("The ALU is %d\n", alu_op);
-    }
-    else if (opcode == 4){  //beq
-        jump = 0;
-        regWrite = 0;
-        regDst = 0;
-        branch = 1;
-        ALUSrc = 0;
-        instType = 01; 
-        memWrite = 0;
-        memToReg = 0;
-        memRead = 0;
-        alu_op = returnAluCode(funct);
-        // printf("The ALU is %d\n", alu_op);
-    }
-    else if (opcode == 2){  //j
-        jump = 1;
-        regWrite = 0;
-        regDst = 0;
-        branch = 0;
-        ALUSrc = 0;
-        instType = 00; 
-        memWrite = 0;
-        memToReg = 0;
-        memRead = 0;
-        alu_op = returnAluCode(funct);
-        // printf("The ALU is %d\n", alu_op);
-    }
 
 
-}
-
-int printINFO(int opcode){
+void printINFO(int opcode){
     printf("total_clock_cycles %d\n", total_clock_cycles);
     
 
@@ -355,7 +317,7 @@ int printINFO(int opcode){
         printf("%s is modified to 0x%x\n", register_name[rd_regFile], dMem[changedMem]);
         printf("pc is modified to 0x%x\n", pc);
         // printf("Within updatePC r-type. The value of pc is %d\n", pc);
-        return;
+        // return;
     }
 
 
@@ -365,12 +327,12 @@ int printINFO(int opcode){
         printf("The value of rt_regfile is %d\n", rt_regFile);
         // printf("Within updatePC i-type The value of pc is %d\n", pc);
         printf("pc is modified to 0x%x\n", pc);
-        return;
+        // return;
     } else if(opcode == 4){
             //!what to output for BEQ??
         printf("memory 0x%x is modified to 0x%x", registerfile[branch_target], branch_target);
         // printf("Wuthin updatePC beq, The value of pc is %d\n", pc);
-        return;
+        // return;
         printf("pc is modified to 0x%x\n", pc);
     }
 
@@ -378,7 +340,7 @@ int printINFO(int opcode){
         //! jump goes here
         // printf("%s is modified to 0x%x\n", register_name[changedRegister], dMem[changedMem]);
         // printf("Within updatePC j, The value of pc is %d\n", pc);
-        return;
+        // return;
     }
 
 
@@ -434,7 +396,7 @@ subu    10 0011 (funct)
         printf("Value of rt_regFile is %d\n", rt_regFile);
         printf("Value of rd_regFile is %d\n", rd_regFile);
 
-        execute(alu_op);
+        execute();
 
     } else{
         return 0;
@@ -492,7 +454,7 @@ int Itype(int code[]){      //John Villalvazo
             printf("immediate: %d\n", immediate);
             int value = registerfile[rt] + immediate;
             printf("Value of rs is %x\n", value);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -512,7 +474,7 @@ int Itype(int code[]){      //John Villalvazo
             rt_regFile = registerfile[rt];
             int value = rt_regFile + immediate;
 
-            execute(alu_op);
+            execute();
             // printf("Value of rs is %d\n", value);
         }
 
@@ -535,7 +497,7 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -550,7 +512,7 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 12){
@@ -571,7 +533,7 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -586,7 +548,7 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 4){
@@ -612,7 +574,7 @@ int Itype(int code[]){      //John Villalvazo
             
             // printf("Jump Target: %d\n", jump_target);
             // execute(opcode, alu_op, rs,  rt,  0,  0, immediate);
-            execute(alu_op);
+            execute();
         }//! ///////////////////////////////////////////////
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -631,7 +593,7 @@ int Itype(int code[]){      //John Villalvazo
             printf("immediate: -%d\n", immediate);
             // printf("Jump Target: %d\n", jump_target);
             // execute(opcode, alu_op, rs,  rt,  0,  0, immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 36){
@@ -652,7 +614,7 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -667,7 +629,7 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 37){
@@ -688,7 +650,7 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -703,7 +665,7 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 48){
@@ -724,7 +686,7 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -739,7 +701,7 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 15){
@@ -760,7 +722,7 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -775,7 +737,7 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 35){
@@ -804,7 +766,7 @@ int Itype(int code[]){      //John Villalvazo
             Mem(opcode);
             
             // printf("Jump %d, regWrite %d, regDst %d, branch %d, ALUSrc %d, instType %d, memWrite %d, memToReg %d, memRead %d\n", jump, regWrite, regDst, branch, ALUSrc, instType, memWrite, memToReg, memRead);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -826,7 +788,7 @@ int Itype(int code[]){      //John Villalvazo
             // int signExtend = immediate << 2;
             // rt = Mem(opcode, signExtend + rs_regFile, immediate);
             
-            execute(alu_op);
+            execute();
             
         }
 
@@ -848,7 +810,7 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -863,7 +825,7 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 10){
@@ -884,7 +846,7 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -899,7 +861,7 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 11){
@@ -920,7 +882,7 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -935,7 +897,7 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 40){
@@ -956,7 +918,7 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -971,7 +933,7 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 56){
@@ -992,7 +954,7 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -1007,7 +969,7 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 41){
@@ -1028,7 +990,7 @@ int Itype(int code[]){      //John Villalvazo
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -1043,7 +1005,7 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute(alu_op);
+            execute();
         }
 
     }else if(opcode == 43){
@@ -1069,7 +1031,7 @@ int Itype(int code[]){      //John Villalvazo
             rs_regFile = registerfile[rs];
 
             Mem(opcode);
-            execute(alu_op);
+            execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -1089,7 +1051,7 @@ int Itype(int code[]){      //John Villalvazo
             rs_regFile = registerfile[rs];
 
             Mem(opcode);
-            execute(alu_op);
+            execute();
         }
 
     }else {
@@ -1117,14 +1079,23 @@ jal     000010
         int shiftLeft = jumpAddress << 2;
         jump_target = shiftLeft + next_pc;
 
-        // execute(alu_op);
+        // execute();
     } else{
         return 0;
     }
     return 0;
 }
 
-int fetch(FILE *ptr, char var[32], int code[32], int k){
+
+
+int decode(int code[]){
+    Rtype(code);    //these is the decode() functions that are embedded within fetch()
+    Itype(code);    //these is the decode() functions that are embedded within fetch()
+    Jtype(code);    //these is the decode() functions that are embedded within fetch()
+}
+
+
+void fetch(FILE *ptr, char var[32], int code[32], int k){
     // int i = 0;
      if ( ptr == NULL ){
         printf( "sample_binary.c file failed to open." ) ;
@@ -1160,7 +1131,7 @@ int fetch(FILE *ptr, char var[32], int code[32], int k){
                 // Itype(code);    //these is the decode() functions that are embedded within fetch()
                 // Jtype(code);    //these is the decode() functions that are embedded within fetch()
                 // printf("Value of k is %d\n", k);
-                return;
+                // return;
             }
 
             // printf("------------------\n");
@@ -1173,7 +1144,7 @@ int fetch(FILE *ptr, char var[32], int code[32], int k){
         // Closing the file using fclose()
         fclose(ptr) ;
     }
-    return 0;
+    // return 0;
 
 }
 
