@@ -16,13 +16,13 @@ int next_pc = 0; //
 int jump_target = 0; //used to jump to a target
 int alu_zero = 0;   //had to used "_" rather than "-" as it thought a subtraction was being done
 int branch_target = 0;
-// int sw = 0;
-// int lw = 0;
 
+int destination = 0;
 // int alu_op = 0;    //used for the alu operation code within execute
 int alu_op;
 int dMem[32];
 int total_clock_cycles = 0;
+int newMem = 0;
 
 //Control Signals
 int jump = 0;
@@ -37,7 +37,6 @@ int memRead = 0;
 
 int opcode;
 int rt, rd, rs, immediate, funct, shamt = 0;
-int rt_regFile, rd_regFile, rs_regFile = 0;
 int jumpAddress;
 int val;
 int changedMem = -1;
@@ -112,10 +111,10 @@ int ControlUnit(int opcode, int funct) {
         alu_op = returnAluCode(funct);
         // printf("The ALU is %d\n", alu_op);
     }
+    return 0;
 }
 
 
-// int execute(int opcode, int funct, int alu_op, int rs, int rt, int rd, int shamt, int immediate){
 int execute(){
 
     ControlUnit(opcode, funct);
@@ -124,112 +123,131 @@ int execute(){
 
     if(jump == 0 && regWrite == 1 && regDst == 1 && branch == 0 && ALUSrc == 0 && instType == 10 && memWrite == 0 && memToReg == 0 && memRead == 0 && alu_op == 2){ //add
         // ControlUnit(opcode, funct);
-        registerfile[rd_regFile] = rs_regFile + rt_regFile;
+        registerfile[rd] = registerfile[rs] + registerfile[rt];
+        // printf("The value inside of registerfile[rs] is %d inside of sub\n", registerfile[rs]);
+        // printf("The value inside of registerfile[rt] is %d inside of sub\n", registerfile[rt]);
+        // printf("The value inside of registerfile[rd] is %d inside of sub\n", registerfile[rd]);
         alu_zero = 0;
         // int destination = *registerfile[rs] + *registerfile[rt];
         // printf("The value of destination is %d\n", destination);
         // printf("%s is modified to 0x%x\n", register_name[rd],destination);
         // printf("pc is modified to 0x%x", pc);
-    } else if(jump == 0 && regWrite == 1 && regDst == 1 && branch == 0 && ALUSrc == 0 && instType == 10 && memWrite == 0 && memToReg == 0 && memRead == 0 && alu_op == 2){ //addu
-        // ControlUnit(opcode, funct);
-
-        registerfile[rd_regFile] = rs_regFile + rt_regFile;
-        alu_zero = 0;
-        // printf("%s is modified to 0x%x\n", register_name[rd],destination);
+        return registerfile[rd];
     } else if(jump == 0 && regWrite == 1 && regDst == 1 && branch == 0 && ALUSrc == 0 && instType == 10 && memWrite == 0 && memToReg == 0 && memRead == 0 && alu_op == 0){ //and
         // ControlUnit(opcode, funct);
 
         alu_zero = 0;
-        registerfile[rd_regFile] = rs_regFile & rt_regFile;
+        registerfile[rd] = registerfile[rs] & registerfile[rt];
+        // printf("The value inside of registerfile[rs] is %d inside of sub\n", registerfile[rs]);
+        // printf("The value inside of registerfile[rt] is %d inside of sub\n", registerfile[rt]);
+        // printf("The value inside of registerfile[rd] is %d inside of sub\n", registerfile[rd]);
         // printf("%s is modified to 0x%x\n", register_name[rd],destination);
         // printf("pc is modified to 0x%x", pc);
+        return registerfile[rd];
     } else if(jump ==1 && regWrite == 0 && regDst == 0 && branch == 0 && ALUSrc == 0 && instType == 0 && memWrite == 0 && memToReg == 0 && memRead == 0 && opcode == 2){  //j
         // ControlUnit(opcode, funct);
 
         pc = jump_target;
         alu_zero = 0;
+        printf("The value inside of pc is %d inside of jump\n", pc);
         // printf("pc value inside of j execute is %d\n", jumpAddress);
         // printf("pc is modified to 0x%x\n",pc);
+        return pc;
     } else if(jump == 0 && regWrite == 1 && regDst == 1 && branch == 0 && ALUSrc == 0 && instType == 10 && memWrite == 0 && memToReg == 0 && memRead == 0 && alu_op == 12){  //nor
         // ControlUnit(opcode, funct);
 
-        registerfile[rd_regFile] = !(rs_regFile | rt_regFile);
+        registerfile[rd] = !(registerfile[rs] | registerfile[rt]);
         alu_zero = 0;
+        // printf("The value inside of registerfile[rs] is %d inside of sub\n", registerfile[rs]);
+        // printf("The value inside of registerfile[rt] is %d inside of sub\n", registerfile[rt]);
+        // printf("The value inside of registerfile[rd] is %d inside of sub\n", registerfile[rd]);
         // printf("nor\n");
         // printf("%s is modified to 0x%x\n", register_name[rd],destination);
         // printf("pc is modified to 0x%x", pc);
+        return registerfile[rd];
     } else if(jump == 0 && regWrite == 1 && regDst == 1 && branch == 0 && ALUSrc == 0 && instType == 10 && memWrite == 0 && memToReg == 0 && memRead == 0 && alu_op == 1){  //or
         // ControlUnit(opcode, funct);
 
-        registerfile[rd_regFile] = rs_regFile | rt_regFile;
+        registerfile[rd] = registerfile[rs] | registerfile[rt];
         alu_zero = 0;
+        // printf("The value inside of registerfile[rs] is %d inside of sub\n", registerfile[rs]);
+        // printf("The value inside of registerfile[rt] is %d inside of sub\n", registerfile[rt]);
+        // printf("The value inside of registerfile[rd] is %d inside of sub\n", registerfile[rd]);
         // printf("or\n");
         // printf("%s is modified to 0x%x\n", register_name[rd],destination);
         // printf("pc is modified to 0x%x",pc);
+        return registerfile[rd];
     } else if(jump == 0 && regWrite == 1 && regDst == 1 && branch == 0 && ALUSrc == 0 && instType == 10 && memWrite == 0 && memToReg == 0 && memRead == 0 && alu_op == 7){  //slt
         // ControlUnit(opcode, funct);
 
-        registerfile[rd_regFile] = (rs_regFile < rt_regFile)?1:0;
+        registerfile[rd] = (registerfile[rs] < registerfile[rt])?1:0;
         alu_zero = 0;
+        // printf("The value inside of registerfile[rs] is %d inside of sub\n", registerfile[rs]);
+        // printf("The value inside of registerfile[rt] is %d inside of sub\n", registerfile[rt]);
+        // printf("The value inside of registerfile[rd] is %d inside of sub\n", registerfile[rd]);
         // printf("The value of destination %d\n", destination);
         // printf("%s is modified to 0x%x\n", register_name[rd],destination);
         // printf("pc is modified to 0x%x", pc);
 
         /*this is going to need the (immediate *4) + offset since that what a offset is*/
+        return registerfile[rt];
     } else if(jump == 0 && regWrite == 0 && regDst == 0 && branch == 0 && ALUSrc == 1 && instType == 00 && memWrite == 1 && memToReg == 0 && memRead == 0){ //SW
         //SW
         // ControlUnit(opcode, funct);
 
-        int signExtend = immediate * 4;
-        int destination = rs_regFile + signExtend;
-        dMem[rt_regFile] = destination;
+        // int signExtend = immediate * 4;
+        // destination = registerfile[rs] + signExtend;
+        
+
+
+        // registerfile[rt_regFile] = Mem(43,destination);
+
+        printf("The value inside of registerfile[rt] is %d inside of sw\n", registerfile[rt]);
         // int destination = 1000;
         // printf("destination value is: %d", destination);
         // printf("%s is modified to 0x%x\n", register_name[rt],destination);
         // printf("pc is modified to 0x%x\n", pc);
 
         // int destination = Mem(opcode, )
+        return destination;
     } else if(jump == 0 && regWrite == 1 && regDst == 1 && branch == 0 && ALUSrc == 0 && instType == 10 && memWrite == 0 && memToReg == 0 && memRead == 0 &&  alu_op == 6){  //sub
         // ControlUnit(opcode, funct);
 
-        registerfile[rd_regFile] = rs_regFile - rt_regFile;
+        registerfile[rd] = registerfile[rs] - registerfile[rt];
         alu_zero = 0;
+        // printf("The value inside of registerfile[rs] is %d inside of sub\n", registerfile[rs]);
+        // printf("The value inside of registerfile[rt] is %d inside of sub\n", registerfile[rt]);
+        // printf("The value inside of registerfile[rd] is %d inside of sub\n", registerfile[rd]);
         // printf("The value of destination %d\n", destination);
         // printf("%s is modified to 0x%x\n", register_name[rd],destination);
         // printf("pc is modified to 0x%x", pc);
-    // }else if(funct == 35 && lw == 1){    //LW
-    } else if(jump == 0 && regWrite == 1 && regDst == 0 && branch == 0 && ALUSrc == 1 && instType == 00 && memWrite == 0 && memToReg == 1 && memRead == 1){
+    // }else if(funct == 35 && lw == 1){    
+        return registerfile[rd];
+    } else if(jump == 0 && regWrite == 1 && regDst == 0 && branch == 0 && ALUSrc == 1 && instType == 00 && memWrite == 0 && memToReg == 1 && memRead == 1){ //LW
         // ControlUnit(opcode, funct);
 
-        int signExtend = immediate * 4;
-        // printf("lw\n");
-        int destination = rd_regFile + signExtend;
+        // int signExtend = immediate * 4;
+        // destination = registerfile[rd] + signExtend;
 
-        registerfile[rt_regFile] = rs_regFile + rt_regFile;
+        // registerfile[rt_regFile] = Mem(35,destination);
+
+
+        printf("The value inside of registerfile[rt] is %d inside of lw\n", registerfile[rt]);
         // int destination = 1000;
 
         // printf("Jump %d, regWrite %d, regDst %d, branch %d, ALUSrc %d, instType %d, memWrite %d, memToReg %d, memRead %d\n", jump, regWrite, regDst, branch, ALUSrc, instType, memWrite, memToReg, memRead);
         // printf("destination value is: %d", destination);
         // printf("%s is modified to 0x%x\n", register_name[rt],destination);
         // printf("pc is modified to 0x%x\n", pc);
-    } else if(jump == 0 && regWrite == 1 && regDst == 1 && branch == 0 && ALUSrc == 0 && instType == 10 && memWrite == 0 && memToReg == 0 && memRead == 0 &&  alu_op == 6){  //subu
-        // ControlUnit(opcode, funct);
-
-        registerfile[rd_regFile] = rs_regFile - rt_regFile;
-        alu_zero = 0;
-        // printf("The value of destination %d\n", destination);
-        // printf("%s is modified to 0x%x\n", register_name[rd],destination);
-        // printf("pc is modified to 0x%x", pc);
-    } 
-
-    if(jump == 0 && regWrite == 0 && regDst == 0 && branch == 1 && ALUSrc == 0 && instType == 01 && memWrite == 0 && memToReg == 0 && memRead == 0){    //for beq (NOTE THIS IS STILL USING OPCODE JUST BEING CALLED funct FOR SIMPLICITY)
+        return destination;
+    } else if(jump == 0 && regWrite == 0 && regDst == 0 && branch == 1 && ALUSrc == 0 && instType == 01 && memWrite == 0 && memToReg == 0 && memRead == 0){    //for beq (NOTE THIS IS STILL USING OPCODE JUST BEING CALLED funct FOR SIMPLICITY)
         // int signExtend = immediate * 2;
         // printf("Value of sign extension is %d\n", signExtend);
         // int shiftLeft = immediate << 1;
         // printf("Value of shift left is %d\n", shiftLeft);
         // branch_target = pc + immediate * 4;
 
-        int sub = rs_regFile - rt_regFile;
+        int sub = registerfile[rs] - registerfile[rt];
         if(sub == 0){
             alu_zero = 1;
         } else{
@@ -241,21 +259,21 @@ int execute(){
         // printf("the value of branch target %d\n", branch_target);
         // printf("pc is modified to 0x%x\n", branch_target);
         branch_target = shiftleft + next_pc;
+
+        // printf("The value branch target is %d inside of beq\n", branch_target);
+        return branch_target;
     }
-
-    // printf("The alu_op is: %d\n", alu_op);
-
     return 0;
 }
 
-/*for beq subtract $1 and $2 which will be used to "jump to branch", be used on every intruction and only "triggered" with beq*/
 
-int Mem(int opcode){
+int Mem(int opcode, int destination){
     // int changedMem = -1;    //default do not change memory
 
     if (opcode == 35){  //load word
 
-        return dMem[(registerfile[rs_regFile] - 0x00000000) >> 2];
+        // return dMem[(registerfile[rs_regFile] - 0x00000000) >> 2];
+        return dMem[destination];
         // if (address == 0){
         //     Writeback(dMem[0], value);
         //     printf("The value of writeback is %d\n", Writeback(dMem[0], value));
@@ -268,7 +286,8 @@ int Mem(int opcode){
     else if (opcode == 43){ //store word
 
         // changedMem = value;
-        return dMem[(registerfile[rt_regFile] - 0) >> 2];
+        return dMem[destination];
+    //    return dMem[(registerfile[rt] - 0) >> 2];
         // if (address == 0){
         //     dMem[0] = value;
         // }
@@ -276,73 +295,133 @@ int Mem(int opcode){
         //     dMem[address/4] = value;
         // }
     }
+
+    return 0;
 }
 
-int Writeback(int opcode, int alu_op){
+int Writeback(int opcode, int funct, int alu_op){
 
     // changedRegister = -1;
 
-    if(opcode == 32 || opcode == 34 || opcode == 36 || opcode == 37 || opcode == 39 || opcode == 42){ //add
-        // changedRegister = rd;
-        printf("Inside Writeback, value of changedRegister is %d\n", changedRegister);
-        // register_name[rd] = value;
-        return total_clock_cycles = total_clock_cycles + 1;
-    }else {
-        
-       return total_clock_cycles = total_clock_cycles + 1;
-    }
+    if(funct == 32){   //add
 
-    if(opcode == 35 || opcode == 43 || opcode == 4){
+        // registerfile[rd] = updateMem;
+        printf("The value inside of registerfile[rd] of add within writeback is %d\n", registerfile[rd]);
+        total_clock_cycles = total_clock_cycles + 1;
+        return registerfile[rd];
+    } else if(funct == 34){    //sub
+
+        // registerfile[rd] = updateMem;
+        printf("The value inside of registerfile[rd] of sub within writeback is %d\n", registerfile[rd]);
+        total_clock_cycles = total_clock_cycles + 1;
+        return registerfile[rd];
+    } else if (funct == 36){   //and
+
+        // registerfile[rd] = updateMem;
+        printf("The value inside of registerfile[rd] of and within writeback is %d\n", registerfile[rd]);
+        total_clock_cycles = total_clock_cycles + 1;
+        return registerfile[rd];
+    } else if (funct == 37){   //or
+
+        // registerfile[rd] = updateMem;
+        printf("The value inside of registerfile[rd] of or within writeback is %d\n", registerfile[rd]);
+        total_clock_cycles = total_clock_cycles + 1;
+        return registerfile[rd];
+    } else if (funct == 39){   //nor
+
+        // registerfile[rd] = updateMem;
+        printf("The value inside of registerfile[rd] of nor within writeback is %d\n", registerfile[rd]);
+        return registerfile[rd];
+        total_clock_cycles = total_clock_cycles + 1;
+    } else if (funct == 42){   //slt
+
+        // registerfile[rd] = updateMem;
+        // printf("The value inside of registerfile[rd] of slt within writeback is %d\n", registerfile[rd]);
+        total_clock_cycles = total_clock_cycles + 1;
+
+        return registerfile[rd];
+    }
+    
+     if(opcode == 35 ){  //LW
+
+        // registerfile[rt] = updateMem;
+        printf("The value inside of registerfile[rt] of lw within writeback is %d\n", registerfile[rt]);
+        total_clock_cycles = total_clock_cycles + 1;
+        return registerfile[rt];
+    } else if(opcode == 43 ){   //SW
+        // registerfile[rt] = updateMem;
+        printf("The value inside of registerfile[rt] of sw within writeback is %d\n", registerfile[rt]);
+        
+        total_clock_cycles = total_clock_cycles + 1;
+        return registerfile[rt];
+    } else if(opcode == 4){ //beq
         // changedRegister = rt;
         // register_name[rt] = value;
-        return total_clock_cycles = total_clock_cycles + 1;
         
-    } else {
-        
-        return total_clock_cycles = total_clock_cycles + 1;
+        total_clock_cycles = total_clock_cycles + 1;
+        // printf("The value of pc is %d\n within writeback\n", branch_target);
+        return branch_target;
     }
-
-    
-
-    printf("##End writeback##\n");
+    return 0;
 }
 
 
 
-void printINFO(int opcode){
+void printINFO(int opcode, int funct, int newMem){
     printf("total_clock_cycles %d\n", total_clock_cycles);
     
 
-    if(funct == 32 || funct == 34 || funct == 36 || funct == 37 || funct == 39 || funct == 42){ //R-types
-        printf("%s is modified to 0x%x\n", register_name[rd_regFile], dMem[changedMem]);
+    if(funct == 32){    //add
+        // printf("%s is modified to 0x%x\n", register_name[rd], dMem[rd]);
+        printf("%s is modified to 0x%x\n", register_name[rd], newMem);
+        printf("pc is modified to 0x%x\n", pc);
+
+    } else if(funct == 34){ //sub
+        printf("%s is modified to 0x%x\n", register_name[rd], newMem);
+        printf("pc is modified to 0x%x\n", pc);
+
+    } else if (funct == 36){    //and
+        printf("%s is modified to 0x%x\n", register_name[rd], newMem);
+        printf("pc is modified to 0x%x\n", pc);
+
+    } else if (funct == 37){    //or
+        printf("%s is modified to 0x%x\n", register_name[rd], newMem);
+        printf("pc is modified to 0x%x\n", pc);
+
+    } else if (funct == 39){    //nor
+        printf("%s is modified to 0x%x\n", register_name[rd], newMem);
+        printf("pc is modified to 0x%x\n", pc);
+
+    } else if (funct == 42){    //slt
+        printf("%s is modified to 0x%x\n", register_name[rd], newMem);
         printf("pc is modified to 0x%x\n", pc);
         // printf("Within updatePC r-type. The value of pc is %d\n", pc);
-        // return;
-    }
+    } 
 
-
+    
+    if(opcode == 35) {  //! LW
     //! look into this since its not printing correctly, or any funct tbh
-    if(opcode == 35 || opcode == 43){  //I-Types
-        printf("%s is modified to 0x%x\n", register_name[rt_regFile], dMem[changedMem]);
-        printf("The value of rt_regfile is %d\n", rt_regFile);
+        printf("%s is modified to 0x%x\n", register_name[rt], newMem);
+        // printf("The value of rt_regfile is %d\n", rt_regFile);
         // printf("Within updatePC i-type The value of pc is %d\n", pc);
         printf("pc is modified to 0x%x\n", pc);
-        // return;
+
+    } else if(opcode == 43){    //!SW
+         printf("%s is modified to 0x%x\n", register_name[rt], newMem);
+        // printf("The value of rt_regfile is %d\n", rt_regFile);
+        // printf("Within updatePC i-type The value of pc is %d\n", pc);
+        printf("pc is modified to 0x%x\n", pc);
+        
     } else if(opcode == 4){
             //!what to output for BEQ??
-        printf("memory 0x%x is modified to 0x%x", registerfile[branch_target], branch_target);
-        // printf("Wuthin updatePC beq, The value of pc is %d\n", pc);
-        // return;
-        printf("pc is modified to 0x%x\n", pc);
-    }
-
-    if(opcode == 2){
+        // printf("memory 0x%x is modified to 0x%x\n", registerfile[branch_target], newMem);
+        // printf("memory 0x%x is modified to 0x%x\n", pc, newMem);
+        printf("pc is modified to 0x%x\n", branch_target);
+    }else if(opcode == 2){
         //! jump goes here
         // printf("%s is modified to 0x%x\n", register_name[changedRegister], dMem[changedMem]);
         // printf("Within updatePC j, The value of pc is %d\n", pc);
-        // return;
     }
-
 
 }
 
@@ -372,7 +451,7 @@ subu    10 0011 (funct)
         operation(funct);
 
 
-        ControlUnit(opcode, funct);
+        // ControlUnit(opcode, funct);
 
         rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
         printf("Rs: %s\n", register_name[rs]);
@@ -388,19 +467,11 @@ subu    10 0011 (funct)
   
         printf("funct: %d\n", funct);
 
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
-        rd_regFile = registerfile[rd];
 
-        printf("Value of rs_regFile is %d\n", rs_regFile);
-        printf("Value of rt_regFile is %d\n", rt_regFile);
-        printf("Value of rd_regFile is %d\n", rd_regFile);
+        // execute();
 
-        execute();
-
-    } else{
-        return 0;
     }
+    return 0;
 }
 
 int Itype(int code[]){      //John Villalvazo
@@ -434,128 +505,11 @@ int Itype(int code[]){      //John Villalvazo
 
     // ControlUnit(opcode, 0);
 
-    if (opcode == 8){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): addi\n");
-
-        ControlUnit(opcode, 0);
-
-        rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s\n", register_name[rs]);
-
-        rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s\n", register_name[rt]);
-
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
-
-        if (code[16] == 0) {
-            immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("immediate: %d\n", immediate);
-            int value = registerfile[rt] + immediate;
-            printf("Value of rs is %x\n", value);
-            execute();
-        }
-        else if (code[16] == 1) {
-            for (int i = 16; i <= 31; i++){
-                if (code[i] == 1){
-                    code[i] = 0;
-                }
-                else if (code[i] == 0){
-                    code[i] = 1;
-                }
-            }
-            immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            immediate = immediate + 1;
-
-            printf("immediate: -%d\n", immediate);
-            
-            
-            rt_regFile = registerfile[rt];
-            int value = rt_regFile + immediate;
-
-            execute();
-            // printf("Value of rs is %d\n", value);
-        }
-
-
-    }else if (opcode == 9){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): addiu");
-
-        ControlUnit(opcode, 0);
-
-        rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s\n", register_name[rs]);
-
-        rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s\n", register_name[rt]);
-
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
-
-        if (code[16] == 0) {
-            immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("immediate: %d\n", immediate);
-            execute();
-        }
-        else if (code[16] == 1) {
-            for (int i = 16; i <= 31; i++){
-                if (code[i] == 1){
-                    code[i] = 0;
-                }
-                else if (code[i] == 0){
-                    code[i] = 1;
-                }
-            }
-            immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            immediate = immediate + 1;
-
-            printf("immediate: -%d\n", immediate);
-            execute();
-        }
-
-    }else if(opcode == 12){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): andi\n");
-
-        ControlUnit(opcode, 0);
-
-        rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s\n", register_name[rs]);
-
-        rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s\n", register_name[rt]);
-
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
-
-        if (code[16] == 0) {
-            immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("immediate: %d\n", immediate);
-            execute();
-        }
-        else if (code[16] == 1) {
-            for (int i = 16; i <= 31; i++){
-                if (code[i] == 1){
-                    code[i] = 0;
-                }
-                else if (code[i] == 0){
-                    code[i] = 1;
-                }
-            }
-            immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            immediate = immediate + 1;
-
-            printf("immediate: -%d\n", immediate);
-            execute();
-        }
-
-    }else if(opcode == 4){
+    if(opcode == 4){
         printf("Instruction Type: I\n");
         printf("Operation (Opcode): beq\n");
 
-        ControlUnit(opcode, 0);
+        // ControlUnit(opcode, 0);
 
         rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
         printf("Rs: %s\n", register_name[rs]);
@@ -563,8 +517,7 @@ int Itype(int code[]){      //John Villalvazo
         rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s\n", register_name[rt]);
 
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
+
 
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
@@ -574,7 +527,7 @@ int Itype(int code[]){      //John Villalvazo
             
             // printf("Jump Target: %d\n", jump_target);
             // execute(opcode, alu_op, rs,  rt,  0,  0, immediate);
-            execute();
+            // execute();
         }//! ///////////////////////////////////////////////
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -593,86 +546,14 @@ int Itype(int code[]){      //John Villalvazo
             printf("immediate: -%d\n", immediate);
             // printf("Jump Target: %d\n", jump_target);
             // execute(opcode, alu_op, rs,  rt,  0,  0, immediate);
-            execute();
-        }
-
-    }else if(opcode == 36){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): lbu\n");
-
-        ControlUnit(opcode, 0);
-
-        rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s\n", register_name[rs]);
-
-        rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s\n", register_name[rt]);
-
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
-
-        if (code[16] == 0) {
-            immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("immediate: %d\n", immediate);
-            execute();
-        }
-        else if (code[16] == 1) {
-            for (int i = 16; i <= 31; i++){
-                if (code[i] == 1){
-                    code[i] = 0;
-                }
-                else if (code[i] == 0){
-                    code[i] = 1;
-                }
-            }
-            immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            immediate = immediate + 1;
-
-            printf("immediate: -%d\n", immediate);
-            execute();
-        }
-
-    }else if(opcode == 37){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): lhu\n");
-
-        ControlUnit(opcode, 0);
-
-        rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s\n", register_name[rs]);
-
-        rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s\n", register_name[rt]);
-
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
-
-        if (code[16] == 0) {
-            immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("immediate: %d\n", immediate);
-            execute();
-        }
-        else if (code[16] == 1) {
-            for (int i = 16; i <= 31; i++){
-                if (code[i] == 1){
-                    code[i] = 0;
-                }
-                else if (code[i] == 0){
-                    code[i] = 1;
-                }
-            }
-            immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            immediate = immediate + 1;
-
-            printf("immediate: -%d\n", immediate);
-            execute();
+            // execute();
         }
 
     }else if(opcode == 48){
         printf("Instruction Type: I\n");
         printf("Operation (Opcode): ll\n");
 
-        ControlUnit(opcode, 0);
+        // ControlUnit(opcode, 0);
 
         rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
         printf("Rs: %s\n", register_name[rs]);
@@ -680,13 +561,11 @@ int Itype(int code[]){      //John Villalvazo
         rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s\n", register_name[rt]);
 
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
 
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute();
+            // execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -701,50 +580,14 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute();
-        }
-
-    }else if(opcode == 15){
-        printf("Instruction Type: I\n");
-        printf("Operation (Opcode): lui\n");
-
-        ControlUnit(opcode, 0);
-
-        rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
-        printf("Rs: %s\n", register_name[rs]);
-
-        rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
-        printf("Rt: %s\n", register_name[rt]);
-
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
-
-        if (code[16] == 0) {
-            immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            printf("immediate: %d\n", immediate);
-            execute();
-        }
-        else if (code[16] == 1) {
-            for (int i = 16; i <= 31; i++){
-                if (code[i] == 1){
-                    code[i] = 0;
-                }
-                else if (code[i] == 0){
-                    code[i] = 1;
-                }
-            }
-            immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
-            immediate = immediate + 1;
-
-            printf("immediate: -%d\n", immediate);
-            execute();
+            // execute();
         }
 
     }else if(opcode == 35){
         printf("Instruction Type: I\n");
         printf("Operation (Opcode): lw\n");
 
-        ControlUnit(opcode, 0);
+        // ControlUnit(opcode, 0);
 
         rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
         printf("Rs: %s\n", register_name[rs]);
@@ -752,8 +595,6 @@ int Itype(int code[]){      //John Villalvazo
         rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s\n", register_name[rt]);
 
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
 
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
@@ -761,12 +602,16 @@ int Itype(int code[]){      //John Villalvazo
 
             // lw = 1;
             // ControlUnit(opcode, 0);
-            // int signExtend = immediate << 2;
-            // rt = Mem(opcode, signExtend + rs);
-            Mem(opcode);
+            int signExtend = immediate * 4;
+            destination = registerfile[rd] + signExtend;
+
+            // registerfile[rt] = Mem(35,destination);
+
+
+            // printf("The value inside of registerfile[rt] is %d inside of lw\n", registerfile[rt_regFile]);
             
             // printf("Jump %d, regWrite %d, regDst %d, branch %d, ALUSrc %d, instType %d, memWrite %d, memToReg %d, memRead %d\n", jump, regWrite, regDst, branch, ALUSrc, instType, memWrite, memToReg, memRead);
-            execute();
+            // execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -782,13 +627,18 @@ int Itype(int code[]){      //John Villalvazo
 
             printf("immediate: -%d\n", immediate);
             // lw = 1;
-            // ControlUnit(opcode, 0);
-            Mem(opcode);
+            int signExtend = immediate * 4;
+            destination = registerfile[rd] + signExtend;
+
+            // registerfile[rt] = Mem(35,destination);
+
+
+            // printf("The value inside of registerfile[rt] is %d inside of lw\n", registerfile[rt_regFile]);
 
             // int signExtend = immediate << 2;
             // rt = Mem(opcode, signExtend + rs_regFile, immediate);
             
-            execute();
+            // execute();
             
         }
 
@@ -796,7 +646,7 @@ int Itype(int code[]){      //John Villalvazo
         printf("Instruction Type: I\n");
         printf("Operation (Opcode): ori\n");
 
-        ControlUnit(opcode, 0);
+        // ControlUnit(opcode, 0);
 
         rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
         printf("Rs: %s\n", register_name[rs]);
@@ -804,13 +654,12 @@ int Itype(int code[]){      //John Villalvazo
         rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s\n", register_name[rt]);
 
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
+
 
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute();
+            // execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -825,14 +674,14 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute();
+            // execute();
         }
 
     }else if(opcode == 10){
         printf("Instruction Type: I\n");
         printf("Operation (Opcode): slti\n");
 
-        ControlUnit(opcode, 0);
+        // ControlUnit(opcode, 0);
 
         rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
         printf("Rs: %s\n", register_name[rs]);
@@ -840,13 +689,11 @@ int Itype(int code[]){      //John Villalvazo
         rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s\n", register_name[rt]);
 
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
 
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute();
+            // execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -861,14 +708,14 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute();
-        }
+            // execute();        
+            }
 
     }else if(opcode == 11){
         printf("Instruction Type: I\n");
         printf("Operation (Opcode): sltiu\n");
 
-        ControlUnit(opcode, 0);
+        // ControlUnit(opcode, 0);
 
         rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
         printf("Rs: %s\n", register_name[rs]);
@@ -876,15 +723,12 @@ int Itype(int code[]){      //John Villalvazo
         rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s\n", register_name[rt]);
 
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
 
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute();
-        }
-        else if (code[16] == 1) {
+            // execute();
+        } else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
                 if (code[i] == 1){
                     code[i] = 0;
@@ -897,14 +741,14 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute();
+            // execute();
         }
 
     }else if(opcode == 40){
         printf("Instruction Type: I\n");
         printf("Operation (Opcode): sb\n");
 
-        ControlUnit(opcode, 0);
+        // ControlUnit(opcode, 0);
 
         rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
         printf("Rs: %s\n", register_name[rs]);
@@ -912,13 +756,11 @@ int Itype(int code[]){      //John Villalvazo
         rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s\n", register_name[rt]);
 
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
 
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute();
+            // execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -933,14 +775,14 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute();
+            // execute();
         }
 
     }else if(opcode == 56){
         printf("Instruction Type: I\n");
         printf("Operation (Opcode): sc\n");
 
-        ControlUnit(opcode, 0);
+        // ControlUnit(opcode, 0);
 
         rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
         printf("Rs: %s\n", register_name[rs]);
@@ -948,13 +790,11 @@ int Itype(int code[]){      //John Villalvazo
         rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s\n", register_name[rt]);
 
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
 
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute();
+            // execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -969,14 +809,14 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute();
+            // execute();
         }
 
     }else if(opcode == 41){
         printf("Instruction Type: I\n");
         printf("Operation (Opcode): sh\n");
 
-        ControlUnit(opcode, 0);
+        // ControlUnit(opcode, 0);
 
         rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
         printf("Rs: %s\n", register_name[rs]);
@@ -984,13 +824,11 @@ int Itype(int code[]){      //John Villalvazo
         rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
             printf("Rt: %s\n", register_name[rt]);
 
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
 
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
-            execute();
+            // execute();
         }
         else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
@@ -1005,14 +843,14 @@ int Itype(int code[]){      //John Villalvazo
             immediate = immediate + 1;
 
             printf("immediate: -%d\n", immediate);
-            execute();
+            // execute();
         }
 
     }else if(opcode == 43){
         printf("Instruction Type: I\n");
         printf("Operation (Opcode): sw\n");
 
-        ControlUnit(opcode, 0);
+        // ControlUnit(opcode, 0);
 
         rs = FiveConvert(code[6], code[7], code[8],code[9],code[10]);
         printf("Rs: %s\n", register_name[rs]);
@@ -1020,20 +858,18 @@ int Itype(int code[]){      //John Villalvazo
         rt = FiveConvert(code[11], code[12], code[13],code[14],code[15]);
         printf("Rt: %s\n", register_name[rt]);
 
-        rs_regFile = registerfile[rs];
-        rt_regFile = registerfile[rt];
-
         if (code[16] == 0) {
             immediate = sixteenConverter(code[16], code[17], code[18],code[19],code[20],code[21], code[22], code[23],code[24],code[25],code[26], code[27], code[28],code[29],code[30], code[31]);
             printf("immediate: %d\n", immediate);
             // sw = 1;
 
-            rs_regFile = registerfile[rs];
 
-            Mem(opcode);
-            execute();
-        }
-        else if (code[16] == 1) {
+            int signExtend = immediate * 4;
+            destination = registerfile[rs] + signExtend;
+        
+            // execute();
+
+        } else if (code[16] == 1) {
             for (int i = 16; i <= 31; i++){
                 if (code[i] == 1){
                     code[i] = 0;
@@ -1048,14 +884,14 @@ int Itype(int code[]){      //John Villalvazo
             printf("immediate: -%d\n", immediate);
             // sw = 1;
 
-            rs_regFile = registerfile[rs];
 
-            Mem(opcode);
-            execute();
+            int signExtend = immediate * 4;
+            destination = registerfile[rs] + signExtend;
+        
+
+            // execute();
         }
 
-    }else {
-        return 0;
     }
     return 0;
 }
@@ -1079,29 +915,28 @@ jal     000010
         int shiftLeft = jumpAddress << 2;
         jump_target = shiftLeft + next_pc;
 
-        // execute();
-    } else{
-        return 0;
+        // execute(alu_op);
     }
     return 0;
 }
-
 
 
 int decode(int code[]){
     Rtype(code);    //these is the decode() functions that are embedded within fetch()
     Itype(code);    //these is the decode() functions that are embedded within fetch()
     Jtype(code);    //these is the decode() functions that are embedded within fetch()
+    return 0;
 }
 
 
-void fetch(FILE *ptr, char var[32], int code[32], int k){
+
+int fetch(FILE *ptr, char var[32], int code[32], int k){
     // int i = 0;
      if ( ptr == NULL ){
         printf( "sample_binary.c file failed to open." ) ;
     } else {
         // for(k; k <= 7; k++){
-            while(k < 9){
+            while(k < 8){
             if(fgets ( var, 33, ptr) != NULL){
                 pc = pc + 4;
                 // printf("pc value is: %d\n", pc);    //wanted to see the pc value
@@ -1116,42 +951,32 @@ void fetch(FILE *ptr, char var[32], int code[32], int k){
                     code[i] = var[i] - '0'; //convert the char into a digit
                 }
 
-                // if(branch_target != 0){
+                // if(opcode == 4){
                 //     pc = branch_target;
-                // } else if( jump_target != 0){
+                // } else if(opcode == 2){
                 //     pc = jump_target;
                 // } else {
                 //     next_pc = pc + 4;
                 //     pc = next_pc;
                 // }
 
-                // printf("\n");
-
-                // Rtype(code);    //these is the decode() functions that are embedded within fetch()
-                // Itype(code);    //these is the decode() functions that are embedded within fetch()
-                // Jtype(code);    //these is the decode() functions that are embedded within fetch()
-                // printf("Value of k is %d\n", k);
-                // return;
+                
+                return 0;
             }
 
             // printf("------------------\n");
             
         }
-        // printf("program terminated:\n");
-        // printf("total execution time is %d cycle\n", total_clock_cycles);
-        // k--;
-        // printf("total execution time is %d cycles\n", k);
-        // Closing the file using fclose()
         fclose(ptr) ;
     }
-    // return 0;
+    return 0;
 
 }
 
 
 int main(int argc, char** argv){
 
-    for(int i = 0; i < 32; i++){
+    for(int i = 1; i < 33; i++){
         //using given initializations for dMem
         if(i == 28){
             dMem[i] = 5;
@@ -1184,39 +1009,37 @@ int main(int argc, char** argv){
     // printf("The value inside of dMem is 0x%x\n", dMem[28]);
     // printf("The value accessed by register_name[0] is %s\n", registerfile[test]);
 
-    for(instructionNum; instructionNum < 9; instructionNum++){
+    for(; instructionNum < 8; instructionNum++){
         fetch(ptr, var, code, instructionNum);
-        // printf("After fetch\n");
+    
         decode(code);
-        // printf("After decode\n");
-        execute();
-        // printf("After execute\n");
-        // printf("The value of funct from global var is %d\n", funct);
 
-        // updatePC(alu_op, val, opcode, funct);
-        // printf("The value of pc is %d\n", pc);
-        // printf("After new pc\n");
-
-        printf("The value of val is %d\n", val);
-        Mem(opcode);
-        // printf("After mem\n");
+        newMem = execute();
+     
+        Mem(opcode, destination);
 
         
 
-        Writeback(opcode, alu_op);
-        printf("Current PC value is %d\n", pc);
+        Writeback(opcode,funct, alu_op);
 
-
-        // printf("changedeRegister value is %d\n", changedRegister);
-        // printf("changedeMem value is %d\n", changedMem);
-
-        printINFO(opcode);
-        // printf("After print\n");
+        printINFO(opcode, funct, newMem);
 
         printf("-----------------------------------\n");
 
     
     }
+
+
+
+// for(int i = 0; i < 32; i++){
+//     //using given initializations for registerfile
+//     // printf("The value inside of registerfile[%d] is %d\n", i, registerfile[i]);
+//         printf("The value inside of dmem[%d] is %d\n", i, dMem[i]);
+
+// }
+
+
+
     return 0;
 }
 
@@ -1229,4 +1052,3 @@ int main(int argc, char** argv){
 00100000100001010000000000000000 <- addi
 00010010001100100000000000000011 <- beq
 */
-
