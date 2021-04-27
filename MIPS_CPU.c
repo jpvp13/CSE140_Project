@@ -10,7 +10,7 @@
 int registerfile[32];
 char *register_name[32] = {"$zero","$at","$v0","$v1","$a0","$a1","$a2","$a3","$t0","$t1","$t2","$t3","$t4","$t5","$t6","$t7","$s0","$s1","$s2","$s3","$s4","$s5","$s6","$s7","$t8","$t9","$k0","$k1","$gp","$sp","$fp","$ra"};
 
-int instructionNum = 0;
+// int instructionNum = 0;
 int pc = 0; //pc counter to be incremented
 int next_pc = 0; //
 int jump_target = 0; //used to jump to a target
@@ -112,12 +112,12 @@ void ControlUnit(int opcode, int funct) {
 
 
 int execute(){
-    int count = 0;
+    // int count = 0;
 
     ControlUnit(opcode, funct);
     // printf("Jump %d, regWrite %d, regDst %d, branch %d, ALUSrc %d, instType %d, memWrite %d, memToReg %d, memRead %d\n", jump, regWrite, regDst, branch, ALUSrc, instType, memWrite, memToReg, memRead);
 
-    while(count != 1){
+    // while(count != 1){
         if(jump == 0 && regWrite == 1 && regDst == 1 && branch == 0 && ALUSrc == 0 && instType == 10 && memWrite == 0 && memToReg == 0 && memRead == 0 && alu_op == 2){ //add
             // ControlUnit(opcode, funct);
             registerfile[rd] = registerfile[rs] + registerfile[rt];
@@ -209,7 +209,7 @@ int execute(){
             branch_target = result + next_pc + 4;
 
             return branch_target;
-        }
+        // }
         
     }
     return 0;
@@ -713,7 +713,7 @@ int main(int argc, char** argv){
     // printf("The value inside of dMem is 0x%x\n", dMem[28]);
     // printf("The value accessed by register_name[0] is %s\n", registerfile[test]);
 
-    for(; instructionNum < 8; instructionNum++){
+    for(int instructionNum = 0; instructionNum < 8; instructionNum++){
         fetch(ptr, var, code, instructionNum);
     
         decode(code);
