@@ -10,19 +10,22 @@
 int registerfile[32];
 char *register_name[32] = {"$zero","$at","$v0","$v1","$a0","$a1","$a2","$a3","$t0","$t1","$t2","$t3","$t4","$t5","$t6","$t7","$s0","$s1","$s2","$s3","$s4","$s5","$s6","$s7","$t8","$t9","$k0","$k1","$gp","$sp","$fp","$ra"};
 
-int instructionNum = 0;
+// int instructionNum = 0;
 int pc = 0; //pc counter to be incremented
 int next_pc = 0; //
 int jump_target = 0; //used to jump to a target
 int alu_zero = 0;   //had to used "_" rather than "-" as it thought a subtraction was being done
 int branch_target = 0;
 
+int iBreakNow;
 int destination = 0;
 // int alu_op = 0;    //used for the alu operation code within execute
 int alu_op;
 int dMem[32];
 int total_clock_cycles = 0;
 int newMem = 0;
+int nextAddress = 0;
+int branchPC = 0;
 
 //Control Signals
 int jump = 0;
@@ -51,7 +54,7 @@ void ControlUnit(int opcode, int funct) {
         memWrite = 0;
         memToReg = 0;
         memRead = 0;
-        alu_op = returnAluCode(funct);
+        alu_op = returnAluCode(funct, opcode);
 
         // printf("The ALU is %d\n", alu_op);
         // printf("The ALU code is %d\n", returnAluCode(funct));
@@ -66,7 +69,7 @@ void ControlUnit(int opcode, int funct) {
         memWrite = 0;
         memToReg = 1;
         memRead = 1;
-        alu_op = returnAluCode(funct);
+        alu_op = returnAluCode(funct, opcode);
         // printf("The ALU is %d\n", alu_op);
     }
     else if (opcode == 43){ //sw
@@ -79,7 +82,7 @@ void ControlUnit(int opcode, int funct) {
         memWrite = 1;
         memToReg = 0;
         memRead = 0;
-        alu_op = returnAluCode(funct);
+        alu_op = returnAluCode(funct, opcode);
         // printf("The ALU is %d\n", alu_op);
     }
     else if (opcode == 4){  //beq
@@ -92,7 +95,7 @@ void ControlUnit(int opcode, int funct) {
         memWrite = 0;
         memToReg = 0;
         memRead = 0;
-        alu_op = returnAluCode(funct);
+        alu_op = returnAluCode(funct, opcode);
         // printf("The ALU is %d\n", alu_op);
     }
     else if (opcode == 2){  //j
@@ -105,19 +108,19 @@ void ControlUnit(int opcode, int funct) {
         memWrite = 0;
         memToReg = 0;
         memRead = 0;
-        alu_op = returnAluCode(funct);
+        alu_op = returnAluCode(funct, opcode);
         // printf("The ALU is %d\n", alu_op);
     }
 }
 
 
 int execute(){
-    int count = 0;
+    // int count = 0;
 
     ControlUnit(opcode, funct);
     // printf("Jump %d, regWrite %d, regDst %d, branch %d, ALUSrc %d, instType %d, memWrite %d, memToReg %d, memRead %d\n", jump, regWrite, regDst, branch, ALUSrc, instType, memWrite, memToReg, memRead);
 
-    while(count != 1){
+    // while(count != 1){
         if(jump == 0 && regWrite == 1 && regDst == 1 && branch == 0 && ALUSrc == 0 && instType == 10 && memWrite == 0 && memToReg == 0 && memRead == 0 && alu_op == 2){ //add
             // ControlUnit(opcode, funct);
             registerfile[rd] = registerfile[rs] + registerfile[rt];
@@ -191,7 +194,7 @@ int execute(){
     
             
             return destination;
-        } else if(jump == 0 && regWrite == 0 && regDst == 0 && branch == 1 && ALUSrc == 0 && instType == 1 && memWrite == 0 && memToReg == 0 && memRead == 0){    //for beq (NOTE THIS IS STILL USING OPCODE JUST BEING CALLED funct FOR SIMPLICITY)
+        } else if(jump == 0 && regWrite == 0 && regDst == 0 && branch == 1 && ALUSrc == 0 && instType == 1 && memWrite == 0 && memToReg == 0 && memRead == 0 && alu_op == 6){    //for beq (NOTE THIS IS STILL USING OPCODE JUST BEING CALLED funct FOR SIMPLICITY)
     
 
             int sub = registerfile[rs] - registerfile[rt];
@@ -207,9 +210,10 @@ int execute(){
             int result = signExtend * 4;
             // printf("The value result is 0x%x inside of beq\n", result);
             branch_target = result + next_pc + 4;
+            // iBreakNow = 1;
 
             return branch_target;
-        }
+            // return pc;
         
     }
     return 0;
@@ -238,10 +242,12 @@ int Mem(int opcode, int destination){
 }
 
 int Writeback(int opcode, int funct, int alu_op){
+    
 
     // changedRegister = -1;
 
-    if(funct == 32){   //!add
+    if(funct == 32 && opcode == 0){   //!add
+    
 
 
         // printf("The value of destination is %d\n", destination);
@@ -249,53 +255,66 @@ int Writeback(int opcode, int funct, int alu_op){
         total_clock_cycles = total_clock_cycles + 1;
         // return registerfile[rd];
         return registerfile[destination];
-    } else if(funct == 34){    //!sub
-
-        // printf("The value of destination is %d\n", destination);
-        total_clock_cycles = total_clock_cycles + 1;
-        return registerfile[rd];
-    } else if (funct == 36){   //!and
-
-        // printf("The value of destination is %d\n", destination);
-        total_clock_cycles = total_clock_cycles + 1;
-        return registerfile[rd];
-    } else if (funct == 37){   //!or
-
-        // printf("The value of destination is %d\n", destination);
-        total_clock_cycles = total_clock_cycles + 1;
-        return registerfile[rd];
-    } else if (funct == 39){   //!nor
-
-        // printf("The value of destination is %d\n", destination);
-        return registerfile[rd];
-        total_clock_cycles = total_clock_cycles + 1;
-    } else if (funct == 42){   //!slt
-
-        // printf("The value of destination is %d\n", destination);
-        total_clock_cycles = total_clock_cycles + 1;
-
-        return registerfile[rd];
-    }
+    } else if(funct == 34 && opcode == 0){    //!sub
     
-     if(opcode == 35 ){  //!LW
 
         // printf("The value of destination is %d\n", destination);
         total_clock_cycles = total_clock_cycles + 1;
-        return registerfile[rt];
-    } else if(opcode == 43 ){   //!SW
+        return registerfile[rd];
+    } else if (funct == 36 && opcode == 0){   //!and
+        
+
+        // printf("The value of destination is %d\n", destination);
+        total_clock_cycles = total_clock_cycles + 1;
+        return registerfile[rd];
+    } else if (funct == 37 && opcode == 0){   //!or
+    
+
+        // printf("The value of destination is %d\n", destination);
+        total_clock_cycles = total_clock_cycles + 1;
+        return registerfile[rd];
+    } else if (funct == 39 && opcode == 0){   //!nor
+    
+
+        // printf("The value of destination is %d\n", destination);
+        return registerfile[rd];
+        total_clock_cycles = total_clock_cycles + 1;
+    } else if (funct == 42 && opcode == 0){   //!slt
+    
+
+        // printf("The value of destination is %d\n", destination);
+        total_clock_cycles = total_clock_cycles + 1;
+
+        return registerfile[rd];
+    } 
+    
+    if(opcode == 43 ){   //!SW
+    // printf("I am inside of sw in writeback\n");
 
         // printf("The value of destination is %d\n", destination);
         
         total_clock_cycles = total_clock_cycles + 1;
         return registerfile[rt];
-    } else if(opcode == 4 && alu_zero == 1){ //!beq
+    } else if(opcode == 35 ){  //!LW
+    // printf("I am inside of lw in writeback\n");
 
-        
+
+        // printf("The value of destination is %d\n", destination);
+        total_clock_cycles = total_clock_cycles + 1;
+        return registerfile[rt];
+    } else  if(opcode == 4 && alu_op == 6){ //!beq
+    // printf("I am inside of beq in writeback\n");
+
+        iBreakNow = 1;
+        branchPC = pc;
+        // printf("The value of iBreakNow inside of writeback is %d\n", iBreakNow);
         total_clock_cycles = total_clock_cycles + 1;
         return branch_target;
     } else if (opcode == 2){    //!jump
+    // printf("I am inside of sw\n");
 
     total_clock_cycles = total_clock_cycles + 1;
+    // return 0;
     
     }
     return 0;
@@ -308,12 +327,7 @@ void printINFO(int opcode, int funct, int newMem){
     
 
     if(funct == 32 && opcode == 0){    //add
-        // int insideValue = dMem[rd];
-
-
-        // printf("The value inside of test is 0x%d\n",insideValue);
-        // printf("The value inside of register name is 0x%d\n",newMem);
-        printf("memory 0x%x is modified to 0x%x\n", registerfile[destination], newMem);
+        printf("%s is modified to 0x%x\n", register_name[rd], newMem);
         printf("pc is modified to 0x%x\n", pc);
 
     } else if(funct == 34 && opcode == 0){ //sub
@@ -333,6 +347,7 @@ void printINFO(int opcode, int funct, int newMem){
         printf("pc is modified to 0x%x\n", pc);
 
     } else if (funct == 42 && opcode == 0){    //slt
+        
         printf("%s is modified to 0x%x\n", register_name[rd], newMem);
         printf("pc is modified to 0x%x\n", pc);
         // printf("Within updatePC r-type. The value of pc is %d\n", pc);
@@ -341,25 +356,32 @@ void printINFO(int opcode, int funct, int newMem){
     
     if(opcode == 35) {  //! LW
 
+        // printf("I am inside of lw in printINFO\n");
+
         printf("%s is modified to 0x%x\n", register_name[rt], newMem);
         printf("pc is modified to 0x%x\n", pc);
 
     } else if(opcode == 4){ //BEQ
+    //  printf("I am inside of beq in printINFO\n");
       
         // printf("WTh is happening\n");
         pc = branch_target;
-        printf("pc is modified to 0x%x\n", branch_target);
+        printf("pc is modified to 0x%x\n", pc);
 
     } else if(opcode == 43){    //!SW
-        printf("%s is modified to 0x%x\n", register_name[rt], newMem);
+    //  printf("I am inside of sw in printINFO\n");
+
         
-        printf("pc is modified to 0x%x\n", pc);
+
+            printf("memory 0x%x is modified to 0x%x\n", newMem, registerfile[rt] );
+            printf("pc is modified to 0x%x\n", pc);
         
     } else  if(opcode == 2){
         //! jump goes here
 
         printf("pc is modified to 0x%x\n", pc);
     }
+    // return 0;
 }
 
 int Rtype(int code[]){              //Uriel Montes
@@ -420,7 +442,7 @@ int Itype(int code[]){      //John Villalvazo
     bne     000101  -5
     lbu     100100  -36
     lhu     100101  -37
-    ll      110000  -48
+    ll      110000  -48s
     lui     001111  -15
     lw      100011  -35
     ori     001101  -13
@@ -648,19 +670,27 @@ int fetch(FILE *ptr, char var[32], int code[32], int k){
                     code[i] = var[i] - '0'; //convert the char into a digit
                 }
 
-                next_pc = pc + 4;
+                
 
-                // if(opcode == 4){
-                //     pc = branch_target;
-                //     printf("Inside fetch branch BEQ\n");
-                // } else if(opcode == 2){
+                if(branch == 1){
+                    int signExtend = immediate < 4;
+                    // printf("The value signExtend is 0x%x inside of beq\n", signExtend);
+
+                    int result = signExtend * 4;
+                    // printf("The value result is 0x%x inside of beq\n", result);
+                    branch_target = result + next_pc + 4;
+                    
+                   
+
+                    // printf("Inside fetch branch BEQ\n");
+                }
                 //     pc = jump_target;
                 //     printf("Inside fetch branch Jump\n");
                 // } else {
                     
                 //     pc = next_pc;
                 // }
-
+                next_pc = pc + 4;
                 
                 return 0;
             }
@@ -707,13 +737,9 @@ int main(int argc, char** argv){
     int code[32];   //making space available
     char var[32];   //taking the instruction as a char then breaking it up into its individual numbers
     
-    // // char test = register_name[0];
-    // printf("The value of register_name[8] is 0x%x\n", registerfile[28]);
-    // printf("The register that is outputted is %s\n", register_name[28]);
-    // printf("The value inside of dMem is 0x%x\n", dMem[28]);
-    // printf("The value accessed by register_name[0] is %s\n", registerfile[test]);
 
-    for(; instructionNum < 8; instructionNum++){
+    for(int instructionNum = 0; instructionNum < 8; instructionNum++){
+        // printf("The value of instructionNum is %d\n", instructionNum);
         fetch(ptr, var, code, instructionNum);
     
         decode(code);
@@ -724,23 +750,69 @@ int main(int argc, char** argv){
         Mem(opcode, newMem);
 
 
-        
-
         Writeback(opcode,funct, alu_op);
-
         printINFO(opcode, funct, newMem);
+        if(branch == 1){
+            // printINFO(opcode, funct, newMem);
+            // printf("The value of pc is %d\n", pc);
+            // printf("The value of branchPC is %d\n", branchPC);
+            // printf("The value of branch_target is %d\n", branch_target);
+            // printf("The value of branch_target + branchPC is %d\n", branch_target + branchPC);
+            
+            if (pc == branchPC + branch_target){
+                // printf("This is inside of the branch for main\n");
+                printINFO(opcode, funct, newMem);
+                // break;
+            } else{
+                for(int remainder = instructionNum; remainder < 9; remainder++){
+                    fetch(ptr, var, code, instructionNum);
+    
+                    decode(code);
+
+                    newMem = execute();
+                
+                    // Mem(opcode, destination);
+                    Mem(opcode, newMem);
+
+
+                    Writeback(opcode,funct, alu_op);
+                    total_clock_cycles = total_clock_cycles - 1;
+                }
+            }
+        } else {
+            instructionNum++;
+
+        }
+
+        
+        
+        // printf("Outside of the loop in main\n");
+        // printf("The value of iBreakNow is %d\n", iBreakNow);
 
         printf("-----------------------------------\n");
+            
+        // if (iBreakNow == 1 ){
+        // for(int remainder = instructionNum; remainder < 8; remainder++){
 
-    
+        //     if(iBreakNow == 1){
+        //         printf("I am inside of iBreakNow\n");
+                
+
+        //         // printf("The value of iBreakNow is %d\n", iBreakNow);
+        //         printf("The value of pc is %d\n", pc);
+        //         // printf("The value of branch_target is %d\n", branch_target);
+        //         // printf("The value of branch_target + pc is %d\n", branch_target + pc);
+        //         printf("The value of branchPC + branch_target is %d\n", branchPC + branch_target);
+
+        //         if (pc == branch_target + branchPC){
+        //             printf("I AM DEEPLY EMBEDDED RN\n");
+        //             printINFO(opcode, funct, newMem);
+        //             break;
+        //         }
+        //     } 
+        
+        // }
     }
-
-    // for(int i = 0; i < 32; i++){
-    //     //using given initializations for dMem
-    //    if(i == 16){
-    //         printf("The value of dMem[%d] is %d\n", i, dMem[i]);
-    //     }
-    // }
 
     printf("Program Terminated:\n");
     printf("total execution time is %d cycles\n", total_clock_cycles);
