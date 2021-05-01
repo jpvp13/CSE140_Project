@@ -118,15 +118,11 @@ int execute(){
     // int count = 0;
 
     ControlUnit(opcode, funct);
-    // printf("Jump %d, regWrite %d, regDst %d, branch %d, ALUSrc %d, instType %d, memWrite %d, memToReg %d, memRead %d\n", jump, regWrite, regDst, branch, ALUSrc, instType, memWrite, memToReg, memRead);
-
-    // while(count != 1){
         if(jump == 0 && regWrite == 1 && regDst == 1 && branch == 0 && ALUSrc == 0 && instType == 10 && memWrite == 0 && memToReg == 0 && memRead == 0 && alu_op == 2){ //add
             // ControlUnit(opcode, funct);
             registerfile[rd] = registerfile[rs] + registerfile[rt];
             alu_zero = 0;
-            // printf("The value of registerfile[%d] within execute is %d\n", rd, registerfile[rd]);
-            // printf("The value of registerfile[%d] within execute is %d\n", destination, registerfile[destination]);
+
             return registerfile[rd];
         } else if(jump == 0 && regWrite == 1 && regDst == 1 && branch == 0 && ALUSrc == 0 && instType == 10 && memWrite == 0 && memToReg == 0 && memRead == 0 && alu_op == 0){ //and
             // ControlUnit(opcode, funct);
@@ -141,15 +137,15 @@ int execute(){
 
             printf("The value of jump_target before any operations is 0x%d inside of jump\n",jump_target);
 
-            int signExtend = jump_target < 2;
+            // int signExtend = jump_target < 2;
             // printf("The value signExtend is 0x%x inside of beq\n", signExtend);
             // printf("The value result is 0x%x inside of beq\n", result);
-            int newTarget = signExtend + pc;
+            // int newTarget = signExtend + pc;
 
-            printf("The value of jump_target after the operations is 0x%d inside of jump\n", newTarget);
+            // printf("The value of jump_target after the operations is 0x%d inside of jump\n", newTarget);
 
 
-            pc = newTarget;
+            // pc = newTarget;
             alu_zero = 0;
    
             return pc;
@@ -311,10 +307,12 @@ int Writeback(int opcode, int funct, int alu_op){
         total_clock_cycles = total_clock_cycles + 1;
         return branch_target;
     } else if (opcode == 2){    //!jump
-    // printf("I am inside of sw\n");
+        // printf("I am inside of sw\n");
 
-    total_clock_cycles = total_clock_cycles + 1;
-    // return 0;
+        total_clock_cycles = total_clock_cycles + 1;
+        printf("The value of jump_target inside of writeback is %d\n", jump_target);
+        // return 0;
+        return jump_target;
     
     }
     return 0;
@@ -350,34 +348,27 @@ void printINFO(int opcode, int funct, int newMem){
         
         printf("%s is modified to 0x%x\n", register_name[rd], newMem);
         printf("pc is modified to 0x%x\n", pc);
-        // printf("Within updatePC r-type. The value of pc is %d\n", pc);
     } 
 
     
     if(opcode == 35) {  //! LW
 
-        // printf("I am inside of lw in printINFO\n");
-
         printf("%s is modified to 0x%x\n", register_name[rt], newMem);
         printf("pc is modified to 0x%x\n", pc);
 
     } else if(opcode == 4){ //BEQ
-    //  printf("I am inside of beq in printINFO\n");
-      
-        // printf("WTh is happening\n");
+  
         pc = branch_target;
         printf("pc is modified to 0x%x\n", pc);
 
     } else if(opcode == 43){    //!SW
-    //  printf("I am inside of sw in printINFO\n");
-
+  
+        printf("memory 0x%x is modified to 0x%x\n", newMem, registerfile[rt] );
+        printf("pc is modified to 0x%x\n", pc);
         
-
-            printf("memory 0x%x is modified to 0x%x\n", newMem, registerfile[rt] );
-            printf("pc is modified to 0x%x\n", pc);
-        
-    } else  if(opcode == 2){
+    } else  if(opcode == 2){    //Jump
         //! jump goes here
+        printf("I am inside of jump\n");
 
         printf("pc is modified to 0x%x\n", pc);
     }
@@ -631,10 +622,6 @@ jal     000010
         // printf("Operation: j\n");
 
         jump_target = twosixConverter(code[6],code[7],code[8],code[9],code[10],code[11],code[12],code[13],code[14],code[15],code[16],code[17],code[18],code[19],code[20],code[21],code[22],code[23],code[24],code[25],code[26],code[27],code[28],code[29],code[30],code[31]);
-        // printf("Address: %d\n", jump_target);
-
-
-        // execute(alu_op);
     }
     return 0;
 }
@@ -679,17 +666,12 @@ int fetch(FILE *ptr, char var[32], int code[32], int k){
                     int result = signExtend * 4;
                     // printf("The value result is 0x%x inside of beq\n", result);
                     branch_target = result + next_pc + 4;
-                    
-                   
+                } else if (jump == 1){
 
-                    // printf("Inside fetch branch BEQ\n");
+                    // printf("The value signExtend is 0x%d inside of beq\n", signExtend);
+                    pc = jump_target + pc;
+
                 }
-                //     pc = jump_target;
-                //     printf("Inside fetch branch Jump\n");
-                // } else {
-                    
-                //     pc = next_pc;
-                // }
                 next_pc = pc + 4;
                 
                 return 0;
