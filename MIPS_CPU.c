@@ -752,6 +752,9 @@ int main(int argc, char** argv){
 
         Writeback(opcode,funct, alu_op);
         printINFO(opcode, funct, newMem);
+        // printf("The value of branch is %d\n", branch);
+        printf("-----------------------------------\n");
+
         if(branch == 1){
             // printINFO(opcode, funct, newMem);
             // printf("The value of pc is %d\n", pc);
@@ -761,10 +764,19 @@ int main(int argc, char** argv){
             
             if (pc == branchPC + branch_target){
                 // printf("This is inside of the branch for main\n");
-                printINFO(opcode, funct, newMem);
+                // printINFO(opcode, funct, newMem);
                 // break;
+                int instructionDistance = (branch_target - branchPC)/4;
+                // printf("The value of instructionDistance is %d\n", instructionDistance);
+                total_clock_cycles = total_clock_cycles - instructionDistance;
+                // printf("This is inside of the branch for main\n");
+                printINFO(opcode, funct, newMem);
+                printf("-----------------------------------\n");
+                break;
+
             } else{
-                for(int remainder = instructionNum; remainder < 9; remainder++){
+                for(instructionNum = instructionNum + 1; instructionNum < 9; instructionNum++){
+                    // printf("The value of instructionNum is %d\n", instructionNum);
                     fetch(ptr, var, code, instructionNum);
     
                     decode(code);
@@ -776,42 +788,30 @@ int main(int argc, char** argv){
 
 
                     Writeback(opcode,funct, alu_op);
-                    total_clock_cycles = total_clock_cycles - 1;
+                    // total_clock_cycles = total_clock_cycles - 1;
+
+                     if (pc == branchPC + branch_target){
+                        int instructionDistance = (branch_target - branchPC)/4;
+                        // printf("The value of instructionDistance is %d\n", instructionDistance);
+                        total_clock_cycles = total_clock_cycles - instructionDistance;
+                        // printf("This is inside of the branch for main\n");
+                        printINFO(opcode, funct, newMem);
+                        printf("-----------------------------------\n");
+                        break;
+                    }
                 }
             }
-        } else {
-            instructionNum++;
+        } 
+        // else {
+        //     instructionNum++;
 
-        }
-
-        
-        
-        // printf("Outside of the loop in main\n");
-        // printf("The value of iBreakNow is %d\n", iBreakNow);
-
-        printf("-----------------------------------\n");
-            
-        // if (iBreakNow == 1 ){
-        // for(int remainder = instructionNum; remainder < 8; remainder++){
-
-        //     if(iBreakNow == 1){
-        //         printf("I am inside of iBreakNow\n");
-                
-
-        //         // printf("The value of iBreakNow is %d\n", iBreakNow);
-        //         printf("The value of pc is %d\n", pc);
-        //         // printf("The value of branch_target is %d\n", branch_target);
-        //         // printf("The value of branch_target + pc is %d\n", branch_target + pc);
-        //         printf("The value of branchPC + branch_target is %d\n", branchPC + branch_target);
-
-        //         if (pc == branch_target + branchPC){
-        //             printf("I AM DEEPLY EMBEDDED RN\n");
-        //             printINFO(opcode, funct, newMem);
-        //             break;
-        //         }
-        //     } 
-        
         // }
+
+        
+        
+       
+
+        
     }
 
     printf("Program Terminated:\n");
