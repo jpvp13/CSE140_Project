@@ -132,20 +132,7 @@ int execute(){
             
             return registerfile[rd];
         } else if(jump ==1 && regWrite == 0 && regDst == 0 && branch == 0 && ALUSrc == 0 && instType == 0 && memWrite == 0 && memToReg == 0 && memRead == 0 && opcode == 2){  //j
-            // ControlUnit(opcode, funct);
 
-
-            printf("The value of jump_target before any operations is 0x%d inside of jump\n",jump_target);
-
-            // int signExtend = jump_target < 2;
-            // printf("The value signExtend is 0x%x inside of beq\n", signExtend);
-            // printf("The value result is 0x%x inside of beq\n", result);
-            // int newTarget = signExtend + pc;
-
-            // printf("The value of jump_target after the operations is 0x%d inside of jump\n", newTarget);
-
-
-            // pc = newTarget;
             alu_zero = 0;
    
             return pc;
@@ -200,16 +187,12 @@ int execute(){
                 alu_zero = 0;
             }
 
-            int signExtend = immediate < 4;
-            // printf("The value signExtend is 0x%x inside of beq\n", signExtend);
-
+            int signExtend = immediate < 4; //for whateer reason if I remove this, it breaks our code so this is more used as a balance keeper to keep the code working. With update pc value elsewere.
             int result = signExtend * 4;
-            // printf("The value result is 0x%x inside of beq\n", result);
             branch_target = result + next_pc + 4;
-            // iBreakNow = 1;
+
 
             return branch_target;
-            // return pc;
         
     }
     return 0;
@@ -219,14 +202,14 @@ int execute(){
 int Mem(int opcode, int destination){
     // int changedMem = -1;    //default do not change memory
 
-    if (opcode == 35){  //load word
+    if (opcode == 35 && memRead == 1){  //load word
 
         // return dMem[(registerfile[rs_regFile] - 0x00000000) >> 2];
         dMem[destination] = rt;
         // printf("The value of dMem[%d] inside of memory for lw is %d\n", destination, dMem[destination]);
         return dMem[destination];
     }
-    else if (opcode == 43){ //store word
+    else if (opcode == 43 && memWrite == 1){ //store word
 
         // changedMem = value;
         dMem[destination] = rt;
@@ -301,7 +284,7 @@ int Writeback(int opcode, int funct, int alu_op){
     } else  if(opcode == 4 && alu_op == 6){ //!beq
     // printf("I am inside of beq in writeback\n");
 
-        iBreakNow = 1;
+        // iBreakNow = 1;
         branchPC = pc;
         // printf("The value of iBreakNow inside of writeback is %d\n", iBreakNow);
         total_clock_cycles = total_clock_cycles + 1;
@@ -310,7 +293,7 @@ int Writeback(int opcode, int funct, int alu_op){
         // printf("I am inside of sw\n");
 
         total_clock_cycles = total_clock_cycles + 1;
-        printf("The value of jump_target inside of writeback is %d\n", jump_target);
+        // printf("The value of jump_target inside of writeback is %d\n", jump_target);
         // return 0;
         return jump_target;
     
@@ -358,7 +341,7 @@ void printINFO(int opcode, int funct, int newMem){
 
     } else if(opcode == 4){ //BEQ
   
-        pc = branch_target;
+        pc = branch_target; //updating the value of pc to branch since our code handles branch_target weirdly
         printf("pc is modified to 0x%x\n", pc);
 
     } else if(opcode == 43){    //!SW
@@ -628,9 +611,9 @@ jal     000010
 
 
 int decode(int code[]){
-    Rtype(code);    //these is the decode() functions that are embedded within fetch()
-    Itype(code);    //these is the decode() functions that are embedded within fetch()
-    Jtype(code);    //these is the decode() functions that are embedded within fetch()
+    Rtype(code);
+    Itype(code);
+    Jtype(code);
     return 0;
 }
 
@@ -737,7 +720,7 @@ int main(int argc, char** argv){
         // printf("The value of branch is %d\n", branch);
         printf("-----------------------------------\n");
 
-        if(branch == 1){
+        if(branch == 1 && alu_zero == 1){
             // printINFO(opcode, funct, newMem);
             // printf("The value of pc is %d\n", pc);
             // printf("The value of branchPC is %d\n", branchPC);
