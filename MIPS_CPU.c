@@ -38,6 +38,13 @@ int memWrite = 0;
 int memToReg = 0;
 int memRead = 0;
 
+//pipeline arrays
+// int if_id[];
+// int id_ex[];
+// int ex_mem[];
+// int mem_wb[];
+
+
 int opcode;
 int rt, rd, rs, immediate, funct, shamt = 0;
 int jumpAddress;
@@ -132,7 +139,8 @@ int execute(){
             
             return registerfile[rd];
         } else if(jump ==1 && regWrite == 0 && regDst == 0 && branch == 0 && ALUSrc == 0 && instType == 0 && memWrite == 0 && memToReg == 0 && memRead == 0 && opcode == 2){  //j
-
+   
+            // pc = newTarget;
             alu_zero = 0;
    
             return pc;
@@ -160,9 +168,6 @@ int execute(){
             
             return registerfile[rd];
         } else if(jump == 0 && regWrite == 0 && regDst == 0 && branch == 0 && ALUSrc == 1 && instType == 00 && memWrite == 1 && memToReg == 0 && memRead == 0){ //SW
-        
-
-            // int destination = Mem(opcode, )
             
             return destination;
 
@@ -187,12 +192,17 @@ int execute(){
                 alu_zero = 0;
             }
 
-            int signExtend = immediate < 4; //for whateer reason if I remove this, it breaks our code so this is more used as a balance keeper to keep the code working. With update pc value elsewere.
-            int result = signExtend * 4;
-            branch_target = result + next_pc + 4;
+            //Weird bug that REQUIRES this to be here or else code breaks
+            int signExtend = immediate < 4;
+            // printf("The value signExtend is 0x%x inside of beq\n", signExtend);
 
+            int result = signExtend * 4;
+            // printf("The value result is 0x%x inside of beq\n", result);
+            branch_target = result + next_pc + 4;
+            // iBreakNow = 1;
 
             return branch_target;
+            // return pc;
         
     }
     return 0;
@@ -202,14 +212,14 @@ int execute(){
 int Mem(int opcode, int destination){
     // int changedMem = -1;    //default do not change memory
 
-    if (opcode == 35 && memRead == 1){  //load word
+    if (opcode == 35){  //load word
 
         // return dMem[(registerfile[rs_regFile] - 0x00000000) >> 2];
         dMem[destination] = rt;
         // printf("The value of dMem[%d] inside of memory for lw is %d\n", destination, dMem[destination]);
         return dMem[destination];
     }
-    else if (opcode == 43 && memWrite == 1){ //store word
+    else if (opcode == 43){ //store word
 
         // changedMem = value;
         dMem[destination] = rt;
@@ -273,6 +283,7 @@ int Writeback(int opcode, int funct, int alu_op){
         // printf("The value of destination is %d\n", destination);
         
         total_clock_cycles = total_clock_cycles + 1;
+        
         return registerfile[rt];
     } else if(opcode == 35 ){  //!LW
     // printf("I am inside of lw in writeback\n");
@@ -303,7 +314,7 @@ int Writeback(int opcode, int funct, int alu_op){
 
 
 
-void printINFO(int opcode, int funct, int newMem){
+void printINFO(int opcode, int funct, int newMem, int check){
     printf("total_clock_cycles %d: \n", total_clock_cycles);
     
 
@@ -341,11 +352,15 @@ void printINFO(int opcode, int funct, int newMem){
 
     } else if(opcode == 4){ //BEQ
   
-        pc = branch_target; //updating the value of pc to branch since our code handles branch_target weirdly
+        pc = branch_target;
         printf("pc is modified to 0x%x\n", pc);
 
     } else if(opcode == 43){    //!SW
-  
+        // printf("The value of pc is %d\n", pc);
+        // pc = branch_target + 4;
+        pc = check;
+        // printf("The value of pc is %d\n", pc);
+        // pc = branch_target;
         printf("memory 0x%x is modified to 0x%x\n", newMem, registerfile[rt] );
         printf("pc is modified to 0x%x\n", pc);
         
@@ -611,9 +626,9 @@ jal     000010
 
 
 int decode(int code[]){
-    Rtype(code);
-    Itype(code);
-    Jtype(code);
+    Rtype(code);    //these is the decode() functions that are embedded within fetch()
+    Itype(code);    //these is the decode() functions that are embedded within fetch()
+    Jtype(code);    //these is the decode() functions that are embedded within fetch()
     return 0;
 }
 
@@ -625,7 +640,7 @@ int fetch(FILE *ptr, char var[32], int code[32], int k){
         printf( "sample_binary.c file failed to open." ) ;
     } else {
         // for(k; k <= 7; k++){
-            while(k < 8){
+            // while(k < 8){
             if(fgets ( var, 33, ptr) != NULL){
                 pc = pc + 4;
                 // printf("pc value is: %d\n", pc);    //wanted to see the pc value
@@ -649,6 +664,9 @@ int fetch(FILE *ptr, char var[32], int code[32], int k){
                     int result = signExtend * 4;
                     // printf("The value result is 0x%x inside of beq\n", result);
                     branch_target = result + next_pc + 4;
+                    // printf("The value of branch target is %d\n", branch_target);
+                    
+                    // branch_target = branch_target + 4 + next_pc;
                 } else if (jump == 1){
 
                     // printf("The value signExtend is 0x%d inside of beq\n", signExtend);
@@ -662,7 +680,7 @@ int fetch(FILE *ptr, char var[32], int code[32], int k){
 
             // printf("------------------\n");
             
-        }
+        // }
         fclose(ptr) ;
     }
     return 0;
@@ -680,8 +698,7 @@ int main(int argc, char** argv){
             dMem[i] = 16;
         } else{
             dMem[i] = 0;
-        }
-
+        } 
         //using given initializations for registerfile
         if(i == 9){
             registerfile[i] = 32;
@@ -696,6 +713,8 @@ int main(int argc, char** argv){
     }
 
     FILE *ptr;
+
+    //!make it so that a user can input name of file
 
     ptr = fopen("Given_Files/sample_binary.txt", "r");
 
@@ -716,26 +735,21 @@ int main(int argc, char** argv){
 
 
         Writeback(opcode,funct, alu_op);
-        printINFO(opcode, funct, newMem);
+        printINFO(opcode, funct, newMem, 0);
         // printf("The value of branch is %d\n", branch);
         printf("-----------------------------------\n");
 
-        if(branch == 1 && alu_zero == 1){
-            // printINFO(opcode, funct, newMem);
-            // printf("The value of pc is %d\n", pc);
-            // printf("The value of branchPC is %d\n", branchPC);
-            // printf("The value of branch_target is %d\n", branch_target);
-            // printf("The value of branch_target + branchPC is %d\n", branch_target + branchPC);
+        if(branch == 1){
             
             if (pc == branchPC + branch_target){
-                // printf("This is inside of the branch for main\n");
-                // printINFO(opcode, funct, newMem);
-                // break;
+
                 int instructionDistance = (branch_target - branchPC)/4;
                 // printf("The value of instructionDistance is %d\n", instructionDistance);
                 total_clock_cycles = total_clock_cycles - instructionDistance;
                 // printf("This is inside of the branch for main\n");
-                printINFO(opcode, funct, newMem);
+                int check = branch_target + 4;
+                // printf("The value of check %d\n", check);
+                printINFO(opcode, funct, newMem, check);
                 printf("-----------------------------------\n");
                 break;
 
@@ -760,23 +774,14 @@ int main(int argc, char** argv){
                         // printf("The value of instructionDistance is %d\n", instructionDistance);
                         total_clock_cycles = total_clock_cycles - instructionDistance;
                         // printf("This is inside of the branch for main\n");
-                        printINFO(opcode, funct, newMem);
+                        int check = branch_target + 4;
+                        printINFO(opcode, funct, newMem, check);
                         printf("-----------------------------------\n");
                         break;
                     }
                 }
             }
         } 
-        // else {
-        //     instructionNum++;
-
-        // }
-
-        
-        
-       
-
-        
     }
 
     printf("Program Terminated:\n");
