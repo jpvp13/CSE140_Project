@@ -637,8 +637,9 @@ int decode(int code[]){
 int fetch(FILE *ptr, char var[32], int code[32], int k){
     // int i = 0;
      if ( ptr == NULL ){
-        printf( "sample_binary.c file failed to open." ) ;
+        printf( "sample_binary.txt file failed to open." ) ;
     } else {
+        
         // for(k; k <= 7; k++){
             // while(k < 8){
             if(fgets ( var, 33, ptr) != NULL){
@@ -689,6 +690,8 @@ int fetch(FILE *ptr, char var[32], int code[32], int k){
 
 
 int main(int argc, char** argv){
+    char filename[40];
+    int count;
 
     for(int i = 0; i < 32; i++){
         //using given initializations for dMem
@@ -713,16 +716,35 @@ int main(int argc, char** argv){
     }
 
     FILE *ptr;
+    char c;  // To store a character read from file
 
+   
     //!make it so that a user can input name of file
+    printf("Enter the program file name to run:\n");
+    scanf("%s", filename);
+    printf("\n");
 
-    ptr = fopen("Given_Files/sample_binary.txt", "r");
+
+    // ptr = fopen("Given_Files/sample_binary.txt", "r");
+    ptr = fopen(filename, "r");
+
+    for (c = getc(ptr); c != EOF; c = getc(ptr)){
+        if (c == '\n'){ // Increment count if this character is newline
+            count = count + 1;
+        }
+    }
+    fclose(ptr);
+
+    ptr = fopen(filename, "r");
+  
+  
 
     int code[32];   //making space available
     char var[32];   //taking the instruction as a char then breaking it up into its individual numbers
     
+    
 
-    for(int instructionNum = 0; instructionNum < 8; instructionNum++){
+    for(int instructionNum = 0; instructionNum < count; instructionNum++){
         // printf("The value of instructionNum is %d\n", instructionNum);
         fetch(ptr, var, code, instructionNum);
     
