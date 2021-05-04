@@ -38,6 +38,13 @@ int memWrite = 0;
 int memToReg = 0;
 int memRead = 0;
 
+//pipeline arrays
+// int if_id[];
+// int id_ex[];
+// int ex_mem[];
+// int mem_wb[];
+
+
 int opcode;
 int rt, rd, rs, immediate, funct, shamt = 0;
 int jumpAddress;
@@ -132,19 +139,7 @@ int execute(){
             
             return registerfile[rd];
         } else if(jump ==1 && regWrite == 0 && regDst == 0 && branch == 0 && ALUSrc == 0 && instType == 0 && memWrite == 0 && memToReg == 0 && memRead == 0 && opcode == 2){  //j
-            // ControlUnit(opcode, funct);
-
-
-            printf("The value of jump_target before any operations is 0x%d inside of jump\n",jump_target);
-
-            // int signExtend = jump_target < 2;
-            // printf("The value signExtend is 0x%x inside of beq\n", signExtend);
-            // printf("The value result is 0x%x inside of beq\n", result);
-            // int newTarget = signExtend + pc;
-
-            // printf("The value of jump_target after the operations is 0x%d inside of jump\n", newTarget);
-
-
+   
             // pc = newTarget;
             alu_zero = 0;
    
@@ -173,9 +168,6 @@ int execute(){
             
             return registerfile[rd];
         } else if(jump == 0 && regWrite == 0 && regDst == 0 && branch == 0 && ALUSrc == 1 && instType == 00 && memWrite == 1 && memToReg == 0 && memRead == 0){ //SW
-        
-
-            // int destination = Mem(opcode, )
             
             return destination;
 
@@ -200,6 +192,7 @@ int execute(){
                 alu_zero = 0;
             }
 
+            //Weird bug that REQUIRES this to be here or else code breaks
             int signExtend = immediate < 4;
             // printf("The value signExtend is 0x%x inside of beq\n", signExtend);
 
@@ -290,6 +283,7 @@ int Writeback(int opcode, int funct, int alu_op){
         // printf("The value of destination is %d\n", destination);
         
         total_clock_cycles = total_clock_cycles + 1;
+        
         return registerfile[rt];
     } else if(opcode == 35 ){  //!LW
     // printf("I am inside of lw in writeback\n");
@@ -301,7 +295,7 @@ int Writeback(int opcode, int funct, int alu_op){
     } else  if(opcode == 4 && alu_op == 6){ //!beq
     // printf("I am inside of beq in writeback\n");
 
-        iBreakNow = 1;
+        // iBreakNow = 1;
         branchPC = pc;
         // printf("The value of iBreakNow inside of writeback is %d\n", iBreakNow);
         total_clock_cycles = total_clock_cycles + 1;
@@ -310,7 +304,7 @@ int Writeback(int opcode, int funct, int alu_op){
         // printf("I am inside of sw\n");
 
         total_clock_cycles = total_clock_cycles + 1;
-        printf("The value of jump_target inside of writeback is %d\n", jump_target);
+        // printf("The value of jump_target inside of writeback is %d\n", jump_target);
         // return 0;
         return jump_target;
     
@@ -320,7 +314,7 @@ int Writeback(int opcode, int funct, int alu_op){
 
 
 
-void printINFO(int opcode, int funct, int newMem){
+void printINFO(int opcode, int funct, int newMem, int check){
     printf("total_clock_cycles %d: \n", total_clock_cycles);
     
 
@@ -362,7 +356,11 @@ void printINFO(int opcode, int funct, int newMem){
         printf("pc is modified to 0x%x\n", pc);
 
     } else if(opcode == 43){    //!SW
-  
+        // printf("The value of pc is %d\n", pc);
+        // pc = branch_target + 4;
+        pc = check;
+        // printf("The value of pc is %d\n", pc);
+        // pc = branch_target;
         printf("memory 0x%x is modified to 0x%x\n", newMem, registerfile[rt] );
         printf("pc is modified to 0x%x\n", pc);
         
@@ -666,6 +664,9 @@ int fetch(FILE *ptr, char var[32], int code[32], int k){
                     int result = signExtend * 4;
                     // printf("The value result is 0x%x inside of beq\n", result);
                     branch_target = result + next_pc + 4;
+                    // printf("The value of branch target is %d\n", branch_target);
+                    
+                    // branch_target = branch_target + 4 + next_pc;
                 } else if (jump == 1){
 
                     // printf("The value signExtend is 0x%d inside of beq\n", signExtend);
@@ -697,8 +698,7 @@ int main(int argc, char** argv){
             dMem[i] = 16;
         } else{
             dMem[i] = 0;
-        }
-
+        } 
         //using given initializations for registerfile
         if(i == 9){
             registerfile[i] = 32;
@@ -713,6 +713,8 @@ int main(int argc, char** argv){
     }
 
     FILE *ptr;
+
+    //!make it so that a user can input name of file
 
     ptr = fopen("Given_Files/sample_binary.txt", "r");
 
@@ -733,26 +735,21 @@ int main(int argc, char** argv){
 
 
         Writeback(opcode,funct, alu_op);
-        printINFO(opcode, funct, newMem);
+        printINFO(opcode, funct, newMem, 0);
         // printf("The value of branch is %d\n", branch);
         printf("-----------------------------------\n");
 
         if(branch == 1){
-            // printINFO(opcode, funct, newMem);
-            // printf("The value of pc is %d\n", pc);
-            // printf("The value of branchPC is %d\n", branchPC);
-            // printf("The value of branch_target is %d\n", branch_target);
-            // printf("The value of branch_target + branchPC is %d\n", branch_target + branchPC);
             
             if (pc == branchPC + branch_target){
-                // printf("This is inside of the branch for main\n");
-                // printINFO(opcode, funct, newMem);
-                // break;
+
                 int instructionDistance = (branch_target - branchPC)/4;
                 // printf("The value of instructionDistance is %d\n", instructionDistance);
                 total_clock_cycles = total_clock_cycles - instructionDistance;
                 // printf("This is inside of the branch for main\n");
-                printINFO(opcode, funct, newMem);
+                int check = branch_target + 4;
+                // printf("The value of check %d\n", check);
+                printINFO(opcode, funct, newMem, check);
                 printf("-----------------------------------\n");
                 break;
 
@@ -777,23 +774,14 @@ int main(int argc, char** argv){
                         // printf("The value of instructionDistance is %d\n", instructionDistance);
                         total_clock_cycles = total_clock_cycles - instructionDistance;
                         // printf("This is inside of the branch for main\n");
-                        printINFO(opcode, funct, newMem);
+                        int check = branch_target + 4;
+                        printINFO(opcode, funct, newMem, check);
                         printf("-----------------------------------\n");
                         break;
                     }
                 }
             }
         } 
-        // else {
-        //     instructionNum++;
-
-        // }
-
-        
-        
-       
-
-        
     }
 
     printf("Program Terminated:\n");
